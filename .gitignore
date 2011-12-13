@@ -1,2 +1,4 @@
 *.pyc
 *.save
+.idea
+out
