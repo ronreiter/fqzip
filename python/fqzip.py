@@ -5,7 +5,7 @@ import argparse
 
 import frequency
 import huffman
-
+import bz2
 
 READ_AHEAD = 2
 POSITION_GRANULARITY = 10
@@ -38,7 +38,12 @@ filedata = open(args.infile)
 if args.compress:
 	encoding_table = json.load(open(args.encoding_table))
 	compressed = open(outfile, "wb")
-	headerdata = open(headerfile, "wb")
+	headerdata = bz2.BZFile(headerfile, "wb")
+
+if args.decompress:
+	huffman_encoding_table = json.load("huffman_encoding_table.json")
+	compressed = open(infile, "rb")
+	headerdata = bz2.BZFile(headerfile, "rb")
 
 stats = {}
 info_strips_processed = 0
@@ -47,12 +52,18 @@ uncompressed_data_count = 0
 compressed_data_count = 0
 
 while True:
-	header = filedata.readline()
-	sequence = filedata.readline()[:-1]
-	plus = filedata.readline()[:-1]
-	quality = filedata.readline()[:-1]
+	if args.compress or args.learn:
+		header = filedata.readline()
+		sequence = filedata.readline()[:-1]
+		plus = filedata.readline()[:-1]
+		quality = filedata.readline()[:-1]
 
-	headerdata.write(header)
+	if args.compress:
+		headerdata.write(header)
+
+	if args.decompress:
+		header = headerdata.readline()
+		
 
 	pos = 0
 	position_string = ""
