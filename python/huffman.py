@@ -1,6 +1,27 @@
 import json
 import heapq
 
+from array import array
+bitstream = array("B")
+chunk = []
+
+def get_bit(stream):
+	global bitstream, chunk
+	if not len(bitstream):
+		if not len(chunk):
+			chunk = [x for x in stream.read(1000)]
+
+		if not len(chunk):
+			return
+		
+		byte = ord(chunk.pop(0))
+		
+		for i in xrange(8):
+			bitstream.append(byte % 2)
+			byte = byte / 2
+	
+	return bitstream.pop()
+
 def fill_table(huffman, prefix, table):
 	if type(huffman) is int:
 		table[huffman] = prefix
@@ -34,6 +55,8 @@ def generate_huffman_table(frequencies):
 		total, huffman = heap[0]
 	
 		fill_table(huffman, "", encoding_table[position_id])
+
+	return encoding_table
 	
 if __name__ == "__main__":
 	frequencies = json.load(open("frequencies.json"))

@@ -13,6 +13,8 @@ def generate_frequency_table(stats):
 		else:
 			frequencies[position_id] = {data: occurence}
 
+	return frequencies
+
 if __name__ == "__main__":
 	stats = shelve.open("stats")
 	open("frequencies.json","w").write(json.dumps(frequencies))
