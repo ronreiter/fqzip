@@ -33,6 +33,7 @@ def fill_table(huffman, prefix, table):
 def generate_huffman_table(frequencies):
 
 	encoding_table = {}
+	decoding_table = {}
 
 	for position_id, histogram in frequencies.iteritems():
 		encoding_table[position_id] = [None] * 256
@@ -55,11 +56,13 @@ def generate_huffman_table(frequencies):
 		total, huffman = heap[0]
 	
 		fill_table(huffman, "", encoding_table[position_id])
+		decoding_table[position_id] = huffman
 
-	return encoding_table
+	return encoding_table, decoding_table
 	
 if __name__ == "__main__":
 	frequencies = json.load(open("frequencies.json"))
-	encoding_table = generate_huffman_table(frequencies)
+	encoding_table, decoding_table = generate_huffman_table(frequencies)
 	open("huffman_encoding_table.json", "w").write(json.dumps(encoding_table))
+	open("huffman_decoding_table.json", "w").write(json.dumps(decoding_table))
 

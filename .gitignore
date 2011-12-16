@@ -1,4 +1,7 @@
+python/huffman_encoding_table.json
+python/huffman_decoding_table.json
 *.pyc
 *.save
 .idea
+test.fastq.*
 out

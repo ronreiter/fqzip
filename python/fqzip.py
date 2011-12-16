@@ -22,7 +22,7 @@ gene_id = {
 	"G" : 150,
 	"N" : 200,
 }
-gene_reverse = {
+gene_id_reverse = {
 	0 : "T",
 	50: "C",
 	100 : "A",
@@ -36,15 +36,18 @@ parser.add_argument("-x", action="store_true", dest="decompress", default=False)
 parser.add_argument("-l", action="store_true", dest="learn", default=False)
 parser.add_argument("-i", action="store", dest="infile", required=True)
 parser.add_argument("-e", action="store", dest="encoding_table", default="huffman_encoding_table.json")
-parser.add_argument("-o", action="store", dest="outfile", required=True)
+parser.add_argument("-d", action="store", dest="decoding_table", default="huffman_decoding_table.json")
+parser.add_argument("-o", action="store", dest="outfile")
 
 args = parser.parse_args()
 
 if args.compress or args.learn:
 	filedata = open(args.infile)
 
-if args.compress or args.decompress:
+if args.compress:
 	encoding_table = json.load(open(args.encoding_table))
+if args.decompress:
+	decoding_table = json.load(open(args.decoding_table))
 
 if args.compress:
 	outfile = args.outfile if args.outfile else args.infile + ".ngz"
@@ -115,7 +118,6 @@ while True:
 
 			effective_quality = quality_value / QUALITY_GRANULARITY + 35
 
-			pos += 1
 			# calculate the effective position (segment)
 			effective_pos = pos / POSITION_GRANULARITY
 			if effective_pos > effective_seqlen:
@@ -135,6 +137,8 @@ while True:
 			if pos > READ_AHEAD:
 				position_string = position_string[5:]
 
+			pos += 1
+
 			if args.compress:
 				compressed.write("\n")
 
@@ -142,26 +146,31 @@ while True:
 	if args.decompress:
 		header = headerdata.readline()
 		position_string = ""
+		reconstructed_gene = ""
+		reconstructed_quality = ""
 
 		for pos in xrange(seqlen):
 
-			current_encoding_table = encoding_table[position_string]
+			current_tree = decoding_table[position_string]
 		
-			bitstring = ""
 			while True:
 				bit = huffman.get_bit(compressed)
-				if not bit:
+				if bit is None: 
 					pos = -1
 					break
 					
-				bitstring += str(bit)
-				if current_encoding_table.has_key(bitstring):
+				if bit == 1:
+					current_tree = current_tree[1]
+				else:
+					current_tree = current_tree[0]
+					
+				if type(current_tree) is int:
 					break
-				
+					
 			if pos == -1:
 				break
-				
-			data = current_encoding_table[bitstring]
+
+			data = current_tree
 
 			gene = gene_id_reverse[data / 50]
 			quality_value = data % 50 + 35
@@ -204,6 +213,7 @@ if args.compress:
 if args.learn:
 	print "Generating Huffman table..."
 	frequency_table = frequency.generate_frequency_table(stats)
-	encoding_table = huffman.generate_huffman_table(frequency_table)
+	encoding_table, decoding_table = huffman.generate_huffman_table(frequency_table)
 	open(args.encoding_table, "w").write(json.dumps(encoding_table))
+	open(args.decoding_table, "w").write(json.dumps(decoding_table))
 	
