@@ -1,3 +1,3 @@
 Welcome.
 
-Dan and Or are gay.
+Lets Squeeze
