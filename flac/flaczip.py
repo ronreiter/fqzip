@@ -17,6 +17,8 @@ def fastq_reader(filename):
 		quality = data.readline()
 		
 		yield header, sequence, quality
+		
+	raise StopIteration
 
 parser = argparse.ArgumentParser(description='Compresses FASTQ files using FLAC compression.')
 parser.add_argument('-i', '--input', dest='input_file', required=True, help='Input file')
@@ -42,10 +44,19 @@ if args.compress:
 	quality_file.setframerate(101)
 	
 	log("Splitting file and compressing headers and sequences...")
+	i = 0
 	for header, sequence, quality in fastq_reader(args.input_file):
 		header_file.write(header)
 		sequence_file.write(sequence)
 		quality_file.writeframes(quality)
+		
+		
+		if not header:
+			break
+			
+		i += 1
+		if i % 100000 == 0:
+			print header.strip()
 		
 	header_file.close()
 	sequence_file.close()
@@ -55,20 +66,20 @@ if args.compress:
 	os.system("flac -8 %s" % quality_filename)
 	
 	log("Creating output archive...")
-	output = zipfile.open(args.output_file)
+	output = zipfile.ZipFile(args.output_file, "w")
 	output.write(header_filename)
 	output.write(sequence_filename)
 	output.write(quality_compressed_filename)
 	output.close()
 	
-	log("Removing temporary file...")
+	log("Removing temporary files...")
 	os.unlink(header_filename)
 	os.unlink(sequence_filename)
 	os.unlink(quality_filename)
 	
 else:
 	log("Extracting sections...")
-	output = zipfile.open(args.output_file, "r")
+	output = zipfile.ZipFile(args.output_file, "r")
 	output.extractall()
 	output.close()
 	
