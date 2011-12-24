@@ -24,10 +24,10 @@ gene_id = {
 }
 gene_id_reverse = {
 	0 : "T",
-	50: "C",
-	100 : "A",
-	150 : "G",
-	200 : "N",
+	1: "C",
+	2 : "A",
+	3 : "G",
+	4 : "N",
 }
 
 parser = argparse.ArgumentParser(description='NGZip compressor.')
@@ -149,9 +149,12 @@ while True:
 		reconstructed_gene = ""
 		reconstructed_quality = ""
 
+		print [x for x in decoding_table.keys() if len(x) == 5]
+
 		for pos in xrange(seqlen):
 
 			current_tree = decoding_table[position_string]
+			print current_tree
 		
 			while True:
 				bit = huffman.get_bit(compressed)
