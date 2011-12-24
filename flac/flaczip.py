@@ -5,18 +5,11 @@ import bz2
 import zipfile
 import wave
 
-parser = argparse.ArgumentParser(description='Compresses FASTQ files.')
-parser.add_argument('input', metavar='i', help='Input file', required=True)
-parser.add_argument('output', metavar='o', help='Output file', required=True)
-parser.add_argument('compress', metavar='c', help='Compress')
-parser.add_argument('extract', metavar='x', help='Extract')
-
-parser.parse_args()
 def log(line):
 	print >> sys.stderr, line
 
 def fastq_reader(filename):
-	data = open(filename):
+	data = open(filename)
 	while True:
 		header = data.readline()
 		sequence = data.readline()
@@ -24,14 +17,24 @@ def fastq_reader(filename):
 		quality = data.readline()
 		
 		yield header, sequence, quality
-	
-header_filename = parser.input + ".head"
-sequence_filename = parser.input + ".seq"
-quality_filename = parser.input + ".wav"
-quality_compressed_filename = parser.input + ".flac"
-if parser.compress:	
-	header_file = bz2.BZ2Open(header_filename,"w")
-	sequence_file = bz2.BZ2Open(sequence_filename, "w")
+
+parser = argparse.ArgumentParser(description='Compresses FASTQ files using FLAC compression.')
+parser.add_argument('-i', '--input', dest='input_file', required=True, help='Input file')
+parser.add_argument('-o', '--output', dest='output_file', required=True, help='Output file')
+
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument('-c', '--compress', dest='compress', help='Compress', action='store_true')
+group.add_argument('-d', '--decompress', dest='compress', help='Decompress', action='store_false')
+
+args = parser.parse_args()
+
+header_filename = args.input_file + ".head"
+sequence_filename = args.input_file + ".seq"
+quality_filename = args.input_file + ".wav"
+quality_compressed_filename = args.input_file + ".flac"
+if args.compress:	
+	header_file = bz2.BZ2File(header_filename,"w")
+	sequence_file = bz2.BZ2File(sequence_filename, "w")
 	quality_file = wave.open(quality_filename, "w")
 	
 	quality_file.setnchannels(1)
@@ -39,7 +42,7 @@ if parser.compress:
 	quality_file.setframerate(101)
 	
 	log("Splitting file and compressing headers and sequences...")
-	for header, sequence, quality in fastq_reader(parser.input):
+	for header, sequence, quality in fastq_reader(args.input_file):
 		header_file.write(header)
 		sequence_file.write(sequence)
 		quality_file.writeframes(quality)
@@ -52,7 +55,7 @@ if parser.compress:
 	os.system("flac -8 %s" % quality_filename)
 	
 	log("Creating output archive...")
-	output = zipfile.open(parser.output)
+	output = zipfile.open(args.output_file)
 	output.write(header_filename)
 	output.write(sequence_filename)
 	output.write(quality_compressed_filename)
@@ -63,9 +66,9 @@ if parser.compress:
 	os.unlink(sequence_filename)
 	os.unlink(quality_filename)
 	
-elif parser.decompress:
+else:
 	log("Extracting sections...")
-	output = zipfile.open(parser.output, "r")
+	output = zipfile.open(args.output_file, "r")
 	output.extractall()
 	output.close()
 	
@@ -75,7 +78,7 @@ elif parser.decompress:
 	os.system("flac -d %s" % quality_compressed_filename)
 	quality_file = wave.open(quality_filename)
 	
-	output = open(parser.output, "w")
+	output = open(args.output_file, "w")
 	
 	log("Writing FASTQ file...")
 	while True:
