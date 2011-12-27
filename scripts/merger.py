@@ -11,5 +11,7 @@ for fn in directory_files:
 	print >> sys.stderr, "%s,%s" % (fn, offset)
 
 	for line in open("%s/%s" % (directory, fn)):
+		if line.startswith(">"):
+			continue
 		output.write(line.upper().strip())
 		offset += len(line)
