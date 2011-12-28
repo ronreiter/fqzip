@@ -1,3 +1,5 @@
+import Huffman.CodeTree;
+
 import java.io.File;
 
 /**
@@ -28,7 +30,10 @@ public class ContextDictionary {
      */
     public CodeTree getHuffmenTree (String contextName) {
 
+        return null;
     }
+
+
 
 
 
