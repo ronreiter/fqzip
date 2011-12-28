@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,6 +11,6 @@ import java.io.OutputStream;
  */
 public interface Compressor {
     void setOutput(OutputStream output);
-    void compressNext(ReadData data);
+    void compressNext(ReadData data) throws IOException;
 
 }

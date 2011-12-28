@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -15,7 +16,7 @@ public class HeaderCompressor implements Compressor {
     }
 
     @Override
-    public void compressNext(ReadData data) {
+    public void compressNext(ReadData data) throws IOException{
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

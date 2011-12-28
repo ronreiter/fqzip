@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,6 +11,6 @@ import java.io.OutputStream;
  */
 public interface Decompressor {
     void setInput(InputStream input);
-    String getNext();
+    String getNext() throws IOException;
 
 }

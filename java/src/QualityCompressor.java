@@ -1,3 +1,5 @@
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -9,13 +11,17 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class QualityCompressor implements Compressor {
+    private OutputStream outputStream;
     @Override
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
+        outputStream = output;
     }
 
     @Override
-    public void compressNext(ReadData data) {
+    public void compressNext(ReadData data) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
+        outputStream.write(data.getQuality().getBytes());
+
     }
 }
