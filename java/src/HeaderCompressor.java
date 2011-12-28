@@ -10,12 +10,12 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class HeaderCompressor implements Compressor {
-    @Override
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
+        String a;
+        a.hashCode()
     }
 
-    @Override
     public void compressNext(ReadData data) throws IOException{
         //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -9,12 +9,10 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class QualityDecompressor implements Decompressor {
-    @Override
     public void setInput(InputStream input) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public String getNext() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

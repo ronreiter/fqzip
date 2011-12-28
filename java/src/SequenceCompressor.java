@@ -10,12 +10,10 @@ import java.io.OutputStream;
  */
 public class SequenceCompressor implements Compressor {
 
-    @Override
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void compressNext(ReadData data) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
