@@ -9,7 +9,7 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface Decompressor {
-    void setInput(InputStream output);
+    void setInput(InputStream input);
     String getNext();
 
 }

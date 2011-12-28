@@ -9,7 +9,7 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface Compressor {
-    void setOutput(OutputStream input);
+    void setOutput(OutputStream output);
     void compressNext(ReadData data);
 
 }

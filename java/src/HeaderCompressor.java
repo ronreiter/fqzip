@@ -10,7 +10,7 @@ import java.io.OutputStream;
  */
 public class HeaderCompressor implements Compressor {
     @Override
-    public void setOutput(OutputStream input) {
+    public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

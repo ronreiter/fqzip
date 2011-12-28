@@ -10,7 +10,7 @@ import java.io.OutputStream;
  */
 public class QualityDecompressor implements Decompressor {
     @Override
-    public void setInput(InputStream output) {
+    public void setInput(InputStream input) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
