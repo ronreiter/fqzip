@@ -22,4 +22,9 @@ public class QualityCompressor implements Compressor {
         outputStream.write(data.getQuality().getBytes());
 
     }
+
+
+
+
 }
+
