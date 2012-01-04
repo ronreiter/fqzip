@@ -12,8 +12,8 @@ import java.io.OutputStream;
 public class HeaderCompressor implements Compressor {
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
-        String a;
-        a.hashCode()
+      // String a;
+      //  a.hashCode()
     }
 
     public void compressNext(ReadData data) throws IOException{
