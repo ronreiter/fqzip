@@ -77,5 +77,9 @@ public class ContextDictionary {
     }
 
     public void createEncodingTable() {
+        for (Map.Entry<String, ContextStats> entry : statistics.entrySet()) {
+            encodingTable.put(entry.getKey(), entry.getValue().buildEncodingTable());
+        }
+
     }
 }

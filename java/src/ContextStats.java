@@ -1,6 +1,7 @@
 import Huffman.CodeTree;
 import Huffman.FrequencyTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,9 +49,13 @@ public class ContextStats {
      * bit string refers to a specific quality score to encode.
      */
     public List<List<Integer>> buildEncodingTable() {
+        List<List<Integer>> encodingTable = new ArrayList<List<Integer>>(MAX_QUALITY_VALUE);
         if (this.tree == null) {
             buildTree();
         }
-        return null;
+        for (int i = 0; i < MAX_QUALITY_VALUE; i++) {
+            encodingTable.add(this.tree.getCode(i));
+        }
+        return encodingTable;
     }
 }
