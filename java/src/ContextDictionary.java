@@ -1,4 +1,5 @@
 import Huffman.CodeTree;
+import Huffman.FrequencyTable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,16 +14,16 @@ import java.util.Map;
  */
 public class ContextDictionary {
 
-    private static HashMap<String, CodeTree> huffmanTreeTable;
-    private static HashMap<String, List<List<Integer>>> encodingTable;
-    private static HashMap<String, ContextStats> statistics;
+    private HashMap<String, CodeTree> huffmanTreeTable;
+    private HashMap<String, List<List<Integer>>> encodingTable;
+    private HashMap<String, ContextStats> statistics;
     
-    public static void startLearning() {
+    public void startLearning() {
         statistics = new HashMap<String, ContextStats>();
         huffmanTreeTable = new HashMap<String, CodeTree>();
     }
     
-    public static void learn(ReadData data) {
+    public void learn(ReadData data) {
         ContextHasher hasher = new ContextHasher();
         
         String quality = data.getQuality();
@@ -44,37 +45,37 @@ public class ContextDictionary {
         }
     }
 
-    public static CodeTree getHuffmanTree (String context) {
+    public CodeTree getHuffmanTree (String context) {
         return huffmanTreeTable.get(context);
     }
     
-    public static List<List<Integer>> getEncodingTable (String context) {
+    public List<List<Integer>> getEncodingTable (String context) {
         return encodingTable.get(context);
     }
 
-    public static HashMap<String, CodeTree> getHuffmanTreeTable() {
+    public HashMap<String, CodeTree> getHuffmanTreeTable() {
         return huffmanTreeTable;
     }
 
-    public static HashMap<String, List<List<Integer>>> getEncodingTable () {
+    public HashMap<String, List<List<Integer>>> getEncodingTable () {
         return encodingTable;
     }
 
-    public static void setHuffmanTreeTable(HashMap<String, CodeTree> huffmanTreeTableInput) {
+    public void setHuffmanTreeTable(HashMap<String, CodeTree> huffmanTreeTableInput) {
         huffmanTreeTable = huffmanTreeTableInput;
     }
 
-    public static void setEncodingTable (HashMap<String, List<List<Integer>>>  encodingTableInput) {
+    public void setEncodingTable (HashMap<String, List<List<Integer>>>  encodingTableInput) {
         encodingTable = encodingTableInput;
     }
 
-    public static void createHuffmanTreeTable() {
+    public void createHuffmanTreeTable() {
+
         for (Map.Entry<String, ContextStats> entry : statistics.entrySet()) {
-            entry.getKey();
-            entry.getValue();
+            huffmanTreeTable.put(entry.getKey(), entry.getValue().buildTree());
         }
     }
 
-    public static void createEncodingTable() {
+    public void createEncodingTable() {
     }
 }

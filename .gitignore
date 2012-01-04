@@ -7,3 +7,4 @@ test.fastq.*
 out
 .DS_Store
 qualities.out
+*.iws

@@ -18,7 +18,7 @@ public class Worker {
         QualityLearner qualityLearner;
 
         if (Main.learnMode) {
-            qualityLearner = new QualityLearner();
+            qualityLearner = new QualityLearner(Main.dictionary);
 
             while (bufferedInput.ready()) {
                 // get a new read from the input
@@ -33,7 +33,7 @@ public class Worker {
         } else {
             headerCompressor = new HeaderCompressor();
             sequenceCompressor = new SequenceCompressor();
-            qualityCompressor = new QualityCompressor();
+            qualityCompressor = new QualityCompressor(Main.dictionary);
 
             headerCompressor.setOutput(new FileOutputStream("headers.out"));
             sequenceCompressor.setOutput(new FileOutputStream("sequences.out"));

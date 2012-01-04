@@ -9,18 +9,21 @@ import java.io.*;
  */
 public class QualityLearner implements Compressor {
     private OutputStream outputStream;
+    private ContextDictionary dictionary;
+
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
         outputStream = output;
     }
 
-    public QualityLearner() {
-        ContextDictionary.startLearning();
+    public QualityLearner(ContextDictionary dictionary) {
+        this.dictionary = dictionary;
+        this.dictionary.startLearning();
     }
 
     public void compressNext(ReadData data) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
-        ContextDictionary.learn(data);
+        this.dictionary.learn(data);
         outputStream.write(data.getQuality().getBytes());
         outputStream.write(10);
 
@@ -30,18 +33,17 @@ public class QualityLearner implements Compressor {
         ObjectOutputStream decodingTreesFileStream = new ObjectOutputStream(new FileOutputStream(decodingTreesFile));
         ObjectOutputStream encodingTablesFileStream = new ObjectOutputStream(new FileOutputStream(encodingTablesFile));
 
-        decodingTreesFileStream.writeObject(ContextDictionary.getHuffmanTreeTable());
-        encodingTablesFileStream.writeObject(ContextDictionary.getEncodingTable());
+        decodingTreesFileStream.writeObject(this.dictionary.getHuffmanTreeTable());
+        encodingTablesFileStream.writeObject(this.dictionary.getEncodingTable());
 
     }
 
-
     public void createHuffmanTreeTable() {
-        ContextDictionary.createHuffmanTreeTable();
+        this.dictionary.createHuffmanTreeTable();
     }
 
     public void createEncodingTable() {
-        ContextDictionary.createEncodingTable();
+        this.dictionary.createEncodingTable();
     }
 }
 

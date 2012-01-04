@@ -1,4 +1,5 @@
 import Huffman.CodeTree;
+import Huffman.FrequencyTable;
 
 import java.util.List;
 
@@ -10,12 +11,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ContextStats {
-    private char[] qualities;
+    private int[] qualities;
     private int total;
     private CodeTree tree;
+    private final char MAX_QUALITY_VALUE = 100;
 
     ContextStats() {
-        this.qualities = new char[50];
+        this.qualities = new int[MAX_QUALITY_VALUE];
         this.total = 0;
     }
     
@@ -34,8 +36,9 @@ public class ContextStats {
      * @return CodeTree the encoding tree
      */
     public CodeTree buildTree() {
-        this.tree = null;
-        return null;
+        FrequencyTable frequencyTable = new FrequencyTable(this.qualities);
+        this.tree = frequencyTable.buildCodeTree();
+        return this.tree;
     }
 
     /**
