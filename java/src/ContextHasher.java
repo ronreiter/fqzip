@@ -8,21 +8,31 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ContextHasher {
-    private byte[] sequence;
+    private final int SEQUENCE_FORWARD = 3;
+    private final int SEQUENCE_BACKWARDS = 3;
+    private final int QUALITY_BACKWARDS = 3;
+    private final int POSITION_DIVISION = 1;
+    private final int QUALITY_DIVISION = 1;
 
+    
     ContextHasher() {
         
     }
-    
-    String hashContext(int position, byte[] sequenceContext, byte[] qualityContext) {
-        return null;
+
+    String hashContext(int position, String sequenceContext, String qualityContext) {
+      String context = "" + (position / POSITION_DIVISION);
+
+      for (int i = position - SEQUENCE_BACKWARDS; i < position + SEQUENCE_FORWARD; i++ ) {
+
+          if (i > 0 && i < 99 ) {
+              context += sequenceContext.charAt(i);
+          }
+      }
+
+
+      
+              
     }
 
-    void resetContext(byte[] sequence) {
-        this.sequence = sequence;
-    }
 
-    String getNextContext(byte qualityContext) {
-        return null;
-    }
 }
