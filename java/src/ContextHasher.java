@@ -20,19 +20,22 @@ public class ContextHasher {
     }
 
     String hashContext(int position, String sequenceContext, String qualityContext) {
-      String context = "" + (position / POSITION_DIVISION);
-
-      for (int i = position - SEQUENCE_BACKWARDS; i < position + SEQUENCE_FORWARD; i++ ) {
-
-          if (i > 0 && i < 99 ) {
-              context += sequenceContext.charAt(i);
-          }
-      }
-
+        String context = "" + (position / POSITION_DIVISION);
+    
+        for (int i = position - SEQUENCE_BACKWARDS; i < Math.min(position + SEQUENCE_FORWARD, 100); i++) {
+            context += sequenceContext.charAt(i);
+        }
+    
+        for (int i = position - QUALITY_BACKWARDS; i < position + QUALITY_BACKWARDS; i++) {
+                context += sequenceContext.charAt(i);
+        }
+         return context;
+            
+    }
 
       
               
-    }
+    
 
 
 }
