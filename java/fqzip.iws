@@ -94,10 +94,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContextDictionary.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ContextDictionary.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ContextDictionary.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="12" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.68472904">
+            <state line="72" column="12" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -106,10 +106,20 @@
       <file leaf-file-name="ContextHasher.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ContextHasher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="36" selection-start="789" selection-end="789" vertical-scroll-proportion="0.0">
+            <state line="24" column="0" selection-start="612" selection-end="612" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1014#1023#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HeaderCompressor.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/HeaderCompressor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="85" selection-start="338" selection-end="338" vertical-scroll-proportion="0.36945814">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -138,14 +148,14 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/HeaderCompressor.java" />
         <option value="$PROJECT_DIR$/src/QualityCompressor.java" />
         <option value="$PROJECT_DIR$/src/ContextStats.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
-        <option value="$PROJECT_DIR$/src/ContextHasher.java" />
         <option value="$PROJECT_DIR$/src/Worker.java" />
         <option value="$PROJECT_DIR$/src/QualityLearner.java" />
         <option value="$PROJECT_DIR$/src/ContextDictionary.java" />
+        <option value="$PROJECT_DIR$/src/ContextHasher.java" />
+        <option value="$PROJECT_DIR$/src/HeaderCompressor.java" />
       </list>
     </option>
   </component>
@@ -507,13 +517,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/HeaderCompressor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="45" selection-start="584" selection-end="584" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ContextStats.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="4" selection-start="306" selection-end="306" vertical-scroll-proportion="0.0">
@@ -551,15 +554,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ContextHasher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="36" selection-start="789" selection-end="789" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/QualityLearner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="25" column="38" selection-start="793" selection-end="793" vertical-scroll-proportion="0.0">
@@ -576,7 +570,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ContextDictionary.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="12" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.68472904">
+        <state line="72" column="12" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ContextHasher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="612" selection-end="612" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1014#1023#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HeaderCompressor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="85" selection-start="338" selection-end="338" vertical-scroll-proportion="0.36945814">
           <folding />
         </state>
       </provider>
