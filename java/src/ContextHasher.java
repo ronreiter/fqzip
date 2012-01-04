@@ -1,9 +1,7 @@
 import com.sun.xml.internal.ws.util.StringUtils;
 
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
->>>>>>> 9a3d9634c7f2ea53995088c3e0833d4a94ae82c0
+
 import java.util.List;
 
 /**
@@ -26,15 +24,12 @@ public class ContextHasher {
      String hashContext(int position, String sequenceContext, String qualityContext) {
         String context = "" + (position / POSITION_DIVISION) + ":";
     
-        for (int i = position - SEQUENCE_BACKWARDS; i < Math.min(position + SEQUENCE_FORWARD, 100); i++) {
+        for (int i = position - SEQUENCE_BACKWARDS; i <= Math.min(position + SEQUENCE_FORWARD, 100); i++) {
             context += sequenceContext.charAt(i);
         }
-        context += ":";
-
-
 
         List<Integer> qualities = new ArrayList<Integer> ();
-        for (int i = Math.max((position - QUALITY_BACKWARDS), 0); i < position + QUALITY_BACKWARDS; i++) {
+        for (int i = Math.max((position - QUALITY_BACKWARDS), 0); i < position; i++) {
 
             qualities.add((((int)qualityContext.charAt(i) - 33) / QUALITY_DIVISION));
         }
@@ -46,10 +41,7 @@ public class ContextHasher {
 
             
     }
-    
-    public static void main (String[] args) {
-        new ContextHasher().hashContext(10, "AGTAACGAGAGATCTACGACTGCATCACTACGACTACGACTCGACTACTG", "$%%^^$GSDSDSD$SA$SAS$^S$SA#A$SAS^ASA$S^A");
-    }
+
 
 
 }
