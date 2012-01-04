@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,23 +9,39 @@ import java.io.OutputStream;
  */
 public class QualityLearner implements Compressor {
     private OutputStream outputStream;
-    private ContextDictionary dictionary;
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
         outputStream = output;
-        dictionary = new ContextDictionary();
+    }
+
+    public QualityLearner() {
+        ContextDictionary.startLearning();
     }
 
     public void compressNext(ReadData data) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
-        dictionary.learn(data);
+        ContextDictionary.learn(data);
         outputStream.write(data.getQuality().getBytes());
         outputStream.write(10);
 
     }
+    
+    public void save(String decodingTreesFile, String encodingTablesFile) throws FileNotFoundException, IOException {
+        ObjectOutputStream decodingTreesFileStream = new ObjectOutputStream(new FileOutputStream(decodingTreesFile));
+        ObjectOutputStream encodingTablesFileStream = new ObjectOutputStream(new FileOutputStream(encodingTablesFile));
+
+        decodingTreesFileStream.writeObject(ContextDictionary.getHuffmanTreeTable());
+        encodingTablesFileStream.writeObject(ContextDictionary.getEncodingTable());
+
+    }
 
 
+    public void createHuffmanTreeTable() {
+        ContextDictionary.createHuffmanTreeTable();
+    }
 
-
+    public void createEncodingTable() {
+        ContextDictionary.createEncodingTable();
+    }
 }
 

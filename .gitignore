@@ -6,4 +6,4 @@ python/huffman_decoding_table.json
 test.fastq.*
 out
 .DS_Store
-
+qualities.out

@@ -14,22 +14,41 @@ public class Worker {
         BufferedReader bufferedInput = new BufferedReader(input);
         
         Vector<Compressor> compressors = new Vector<Compressor>();
-        Compressor headerCompressor = new HeaderCompressor();
-        Compressor sequenceCompressor = new SequenceCompressor();
-        Compressor qualityCompressor = new QualityCompressor();
+        Compressor headerCompressor, sequenceCompressor, qualityCompressor;
+        QualityLearner qualityLearner;
 
-        headerCompressor.setOutput(new FileOutputStream("headers.out"));
-        sequenceCompressor.setOutput(new FileOutputStream("sequences.out"));
-        qualityCompressor.setOutput(new FileOutputStream("qualities.out"));
+        if (Main.learnMode) {
+            qualityLearner = new QualityLearner();
 
-        while (bufferedInput.ready()) {
-            // get a new read from the input
-            ReadData read = new ReadData(bufferedInput);
-            headerCompressor.compressNext(read);
-            sequenceCompressor.compressNext(read);
-            qualityCompressor.compressNext(read);
+            while (bufferedInput.ready()) {
+                // get a new read from the input
+                ReadData read = new ReadData(bufferedInput);
+                qualityLearner.compressNext(read);
+            }
+
+            qualityLearner.createHuffmanTreeTable();
+            qualityLearner.createEncodingTable();
+            qualityLearner.save(Main.decodingTreesFile, Main.encodingTableFile);
+
+        } else {
+            headerCompressor = new HeaderCompressor();
+            sequenceCompressor = new SequenceCompressor();
+            qualityCompressor = new QualityCompressor();
+
+            headerCompressor.setOutput(new FileOutputStream("headers.out"));
+            sequenceCompressor.setOutput(new FileOutputStream("sequences.out"));
+            qualityCompressor.setOutput(new FileOutputStream("qualities.out"));
+
+            while (bufferedInput.ready()) {
+                // get a new read from the input
+                ReadData read = new ReadData(bufferedInput);
+                headerCompressor.compressNext(read);
+                sequenceCompressor.compressNext(read);
+                qualityCompressor.compressNext(read);
+            }
 
         }
+
     }
 
 }

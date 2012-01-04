@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.util.List;
 
 /**
@@ -14,9 +16,9 @@ public class ContextHasher {
     private final int POSITION_DIVISION = 1;
     private final int QUALITY_DIVISION = 1;
 
-    
+
     ContextHasher() {
-        
+
     }
 
     String hashContext(int position, String sequenceContext, String qualityContext) {

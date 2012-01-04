@@ -8,6 +8,10 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class Main {
+    public static boolean learnMode = true;
+    public static String decodingTreesFile = "decoding_trees.data";
+    public static String encodingTableFile = "encoding_table.data";
+
     public static void main(String[] arguments) throws FileNotFoundException, IOException {
         Worker worker = new Worker();
         worker.run(arguments[0], arguments[1]);

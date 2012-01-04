@@ -20,6 +20,7 @@ public class QualityCompressor implements Compressor {
     public void compressNext(ReadData data) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
         outputStream.write(data.getQuality().getBytes());
+        outputStream.write(10);
 
     }
 
