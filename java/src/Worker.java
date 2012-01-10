@@ -47,6 +47,9 @@ public class Worker {
                 qualityCompressor.compressNext(read);
             }
 
+
+            qualityCompressor.closeOutput();
+
         }
 
     }

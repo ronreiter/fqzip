@@ -12,16 +12,23 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ContextHasher {
-    private final int SEQUENCE_FORWARD = 3;
-    private final int SEQUENCE_BACKWARDS = 3;
-    private final int QUALITY_BACKWARDS = 3;
-    private final int POSITION_DIVISION = 1;
-    private final int QUALITY_DIVISION = 1;
+    private static final int SEQUENCE_FORWARD = 3;
+    private static final int SEQUENCE_BACKWARDS = 3;
+    private static final int QUALITY_BACKWARDS = 3;
+    private static final int POSITION_DIVISION = 1;
+    private static final int QUALITY_DIVISION = 1;
     ContextHasher() {
 
     }
 
-     String hashContext(int position, String sequenceContext, String qualityContext) {
+    /**
+     *
+     * @param position
+     * @param sequenceContext
+     * @param qualityContext
+     * @return
+     */
+     public static String hashContext(int position, String sequenceContext, String qualityContext) {
         String context = "" + (position / POSITION_DIVISION) + ":";
     
         for (int i = position - SEQUENCE_BACKWARDS; i <= Math.min(position + SEQUENCE_FORWARD, 100); i++) {
