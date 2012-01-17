@@ -1,6 +1,7 @@
 import Huffman.CodeTree;
 import Huffman.FrequencyTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
  * Time: 9:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ContextDictionary {
+public class ContextDictionary implements Serializable {
 
     private transient Map<String, CodeTree> huffmanTreeTable;
     private transient Map<String, List<List<Integer>>> encodingTable;
@@ -83,4 +84,5 @@ public class ContextDictionary {
         }
 
     }
+
 }
