@@ -5,6 +5,7 @@ python/huffman_decoding_table.json
 .idea
 test.fastq.*
 out
+*.out
 .DS_Store
 qualities.out
 *.iws

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -17,4 +18,9 @@ public class SequenceCompressor implements Compressor {
     public void compressNext(ReadData data) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public void closeOutput() throws IOException {
+
+    }
+
 }

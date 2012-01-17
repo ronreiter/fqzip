@@ -8,12 +8,17 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class QualityLearner implements Compressor {
-    private OutputStream outputStream;
+    private ObjectOutputStream outputStream;
     private ContextDictionary dictionary;
+    private int reads = 0;
 
     public void setOutput(OutputStream output) {
         //To change body of implemented methods use File | Settings | File Templates.
-        outputStream = output;
+        try {
+            this.outputStream = new ObjectOutputStream(output);
+        } catch (IOException e) {
+            System.out.println("Error creating the object output stream.");
+        }
     }
 
     public QualityLearner(ContextDictionary dictionary) {
@@ -24,26 +29,31 @@ public class QualityLearner implements Compressor {
     public void compressNext(ReadData data) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
         this.dictionary.learn(data);
-        outputStream.write(data.getQuality().getBytes());
-        outputStream.write(10);
+        this.reads++;
+        if (this.reads % 10000 == 0) {
+            System.out.println(Integer.toString(this.reads));
 
+        }
     }
     
-    public void save(String decodingTreesFile, String encodingTablesFile) throws FileNotFoundException, IOException {
-        ObjectOutputStream decodingTreesFileStream = new ObjectOutputStream(new FileOutputStream(decodingTreesFile));
-        ObjectOutputStream encodingTablesFileStream = new ObjectOutputStream(new FileOutputStream(encodingTablesFile));
-
-        decodingTreesFileStream.writeObject(this.dictionary.getHuffmanTreeTable());
-        encodingTablesFileStream.writeObject(this.dictionary.getEncodingTable());
+    private void save() throws IOException {
+        outputStream.writeObject(this.dictionary);
 
     }
 
-    public void createHuffmanTreeTable() {
+    private void createHuffmanTreeTable() {
         this.dictionary.createHuffmanTreeTable();
     }
 
-    public void createEncodingTable() {
+    private void createEncodingTable() {
         this.dictionary.createEncodingTable();
+    }
+    
+    public void closeOutput() throws IOException {
+        this.createHuffmanTreeTable();
+        this.createEncodingTable();
+        this.save();
+        this.outputStream.close();
     }
 }
 

@@ -19,6 +19,7 @@ public class Worker {
 
         if (Main.learnMode) {
             qualityLearner = new QualityLearner(Main.dictionary);
+            qualityLearner.setOutput(new FileOutputStream("tree.out"));
 
             while (bufferedInput.ready()) {
                 // get a new read from the input
@@ -26,9 +27,7 @@ public class Worker {
                 qualityLearner.compressNext(read);
             }
 
-            qualityLearner.createHuffmanTreeTable();
-            qualityLearner.createEncodingTable();
-            qualityLearner.save(Main.decodingTreesFile, Main.encodingTableFile);
+            qualityLearner.closeOutput();
 
         } else {
             headerCompressor = new HeaderCompressor();

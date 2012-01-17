@@ -12,5 +12,6 @@ import java.io.OutputStream;
 public interface Decompressor {
     void setInput(InputStream input);
     String getNext() throws IOException;
+    void closeOutput() throws IOException;
 
 }

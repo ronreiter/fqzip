@@ -17,4 +17,8 @@ public class HeaderCompressor implements Compressor {
     public void compressNext(ReadData data) throws IOException{
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public void closeOutput() throws IOException {
+
+    }
 }

@@ -19,7 +19,14 @@ public class ContextStats {
 
     ContextStats() {
         this.qualities = new int[MAX_QUALITY_VALUE];
-        this.total = 0;
+
+        // set all qualities to 1 because we can't use 0 as a statistic.
+        // the huffman tree just won't build right.
+        for (int i = 0; i < MAX_QUALITY_VALUE; i++) {
+            this.qualities[i] = 1;
+        }
+        this.total = MAX_QUALITY_VALUE;
+
     }
     
     public void addStatistic(char index) {

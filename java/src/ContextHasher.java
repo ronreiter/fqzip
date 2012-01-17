@@ -12,15 +12,16 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ContextHasher {
-    private static final int SEQUENCE_FORWARD = 3;
-    private static final int SEQUENCE_BACKWARDS = 3;
-    private static final int QUALITY_BACKWARDS = 3;
-    private static final int POSITION_DIVISION = 1;
-    private static final int QUALITY_DIVISION = 1;
+    private static final int SEQUENCE_FORWARD = 1;
+    private static final int SEQUENCE_BACKWARDS = 1;
+    private static final int QUALITY_BACKWARDS = 1;
+    private static final int POSITION_DIVISION = 10;
+    private static final int QUALITY_DIVISION = 5;
+    private static final int SEQUENCE_SIZE = 100;
+
     ContextHasher() {
 
     }
-
     /**
      *
      * @param position
@@ -31,7 +32,8 @@ public class ContextHasher {
      public static String hashContext(int position, String sequenceContext, String qualityContext) {
         String context = "" + (position / POSITION_DIVISION) + ":";
     
-        for (int i = position - SEQUENCE_BACKWARDS; i <= Math.min(position + SEQUENCE_FORWARD, 100); i++) {
+        for (int i = Math.max(position - SEQUENCE_BACKWARDS, 0);
+             i < Math.min(position + SEQUENCE_FORWARD, SEQUENCE_SIZE); i++) {
             context += sequenceContext.charAt(i);
         }
 
@@ -42,7 +44,6 @@ public class ContextHasher {
         }
         context += ":" + Utils.join(qualities,",");
 
-        System.out.println(context);
          return context;
 
 
