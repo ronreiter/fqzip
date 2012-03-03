@@ -15,8 +15,8 @@ public class SequenceDecompressor implements Decompressor {
         reader = new BufferedReader(new InputStreamReader(new ZipInputStream(input)));
     }
 
-    public String getNext() throws IOException {
-        return reader.readLine();
+    public void fillNext(ReadData data) throws IOException {
+
     }
 
     public void closeInput() throws IOException {

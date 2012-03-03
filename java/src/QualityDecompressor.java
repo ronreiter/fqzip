@@ -3,6 +3,7 @@ import Huffman.BitInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,10 +20,12 @@ public class QualityDecompressor implements Decompressor {
         bitInputStream = new BitInputStream(input);
     }
 
-    public String getNext() {
-        String context = null;
-        dictionary.getHuffmanTree(context);
-        return null;
+    public void fillNext(ReadData data) {
+        for(int i = 0; i < data.getQuality().length(); i++) {
+            String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
+            dictionary.getHuffmanTree(context);
+
+        }
     }
 
     public void closeInput() throws IOException {
