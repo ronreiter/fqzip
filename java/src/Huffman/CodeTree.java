@@ -1,5 +1,6 @@
 package Huffman;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import java.util.List;
  *          / \
  *         C   D
  */
-public final class CodeTree {
+public final class CodeTree implements Serializable {
 	
 	public final InternalNode root;  // Not null
 	

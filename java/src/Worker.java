@@ -1,56 +1,84 @@
 import java.io.*;
-import java.util.Vector;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ron
- * Date: 12/14/11
- * Time: 12:51 AM
- * To change this template use File | Settings | File Templates.
- */
-public class Worker {
-    public static void run(String inputFile, String outputFile) throws FileNotFoundException, IOException {
-        FileReader input = new FileReader(inputFile);
-        BufferedReader bufferedInput = new BufferedReader(input);
-        
-        Vector<Compressor> compressors = new Vector<Compressor>();
-        Compressor headerCompressor, sequenceCompressor, qualityCompressor;
-        QualityLearner qualityLearner;
+public class Worker implements Runnable {
 
-        if (Main.learnMode) {
-            qualityLearner = new QualityLearner(Main.dictionary);
-            qualityLearner.setOutput(new FileOutputStream("tree.out"));
+    private ThreadPoolManager manager;
+    private ThreadPoolManager.Mode runningMode;
+    private int sequenceNumber;
+    private String outputFile;
 
-            while (bufferedInput.ready()) {
-                // get a new read from the input
-                ReadData read = new ReadData(bufferedInput);
-                qualityLearner.compressNext(read);
-            }
-
-            qualityLearner.closeOutput();
-
-        } else {
-            headerCompressor = new HeaderCompressor();
-            sequenceCompressor = new SequenceCompressor();
-            qualityCompressor = new QualityCompressor(Main.dictionary);
-
-            headerCompressor.setOutput(new FileOutputStream("headers.out"));
-            sequenceCompressor.setOutput(new FileOutputStream("sequences.out"));
-            qualityCompressor.setOutput(new FileOutputStream("qualities.out"));
-
-            while (bufferedInput.ready()) {
-                // get a new read from the input
-                ReadData read = new ReadData(bufferedInput);
-                headerCompressor.compressNext(read);
-                sequenceCompressor.compressNext(read);
-                qualityCompressor.compressNext(read);
-            }
-
-
-            qualityCompressor.closeOutput();
-
-        }
+    public Worker(int sequenceNumber, ThreadPoolManager manager) {
+        this.manager = manager;
+        this.sequenceNumber = sequenceNumber;
+        this.runningMode = manager.getRunningMode();
+        this.outputFile = manager.getOutputFileName();
 
     }
 
+    @Override
+    public void run() {
+        System.err.println("Worker #" + sequenceNumber + " started.");
+        try {
+            switch (runningMode) {
+                case LEARN:
+                    learn();
+                    break;
+
+                case COMPRESS:
+                    compress();
+                    break;
+
+                case DECOMPRESS:
+                    decompress();
+                    break;
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        System.err.println("Worker #" + sequenceNumber + " complete.");
+
+    }
+
+    private void learn() throws IOException {
+        QualityLearner qualityLearner = new QualityLearner(Main.dictionary);
+
+        qualityLearner.setOutput(new FileOutputStream(Main.TREE_FILENAME));
+        ReadData read = null;
+
+        while ((read = manager.getRead()) != null) {
+            // get a new read from the input
+            qualityLearner.compressNext(read);
+        }
+
+        qualityLearner.closeOutput();
+    }
+
+    private void compress() throws IOException {
+        ReadData read = null;
+
+        Compressor headerCompressor = new HeaderCompressor();
+        Compressor sequenceCompressor = new SequenceCompressor();
+        Compressor qualityCompressor = new QualityCompressor(Main.dictionary);
+
+        headerCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers" ));
+        sequenceCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".sequence" ));
+        qualityCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
+
+        while ((read = manager.getRead()) != null) {
+            // get a new read from the input
+            headerCompressor.compressNext(read);
+            sequenceCompressor.compressNext(read);
+            qualityCompressor.compressNext(read);
+        }
+
+        qualityCompressor.closeOutput();
+    }
+    
+    private void decompress() throws IOException {
+        Decompressor headerDecompressor = new HeaderDecompressor();
+        Decompressor sequenceDecompressor = new SequenceDecompressor();
+        Decompressor qualityDecompressor = new QualityDecompressor();
+
+
+    }
 }

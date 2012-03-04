@@ -45,9 +45,6 @@ public class QualityCompressor implements Compressor {
                 bitOutputStream.write(bit);
             }
         }
-
-
-
     }
 
 

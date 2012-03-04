@@ -151,6 +151,13 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="ron">
+      <words>
+        <w>decompressor</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/fqzip.iml" filepath="$PROJECT_DIR$/fqzip.iml" />

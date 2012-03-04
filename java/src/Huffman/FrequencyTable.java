@@ -1,5 +1,6 @@
 package Huffman;
 
+import java.io.Serializable;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -13,7 +14,7 @@ import java.util.Queue;
  * - Build a code tree that is statically optimal for the current frequencies.
  * This implementation correctly builds an optimal code tree for any legal number of symbols (2 to Integer.MAX_VALUE), with each symbol having a legal frequency (0 to Integer.MAX_VALUE). It is designed not to err due to overflow.
  */
-public final class FrequencyTable {
+public final class FrequencyTable implements Serializable {
 	
 	private int[] frequencies;
 	

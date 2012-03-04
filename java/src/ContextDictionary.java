@@ -1,24 +1,15 @@
 import Huffman.CodeTree;
-import Huffman.FrequencyTable;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: barakjacob
- * Date: 12/28/11
- * Time: 9:48 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ContextDictionary implements Serializable {
 
-    private transient Map<String, CodeTree> huffmanTreeTable;
-    private transient Map<String, List<List<Integer>>> encodingTable;
-    private transient Map<String, ContextStats> statistics;
+    private  Map<String, CodeTree> huffmanTreeTable;
+    private  Map<String, List<List<Integer>>> encodingTable;
+    private  Map<String, ContextStats> statistics;
     
     public void startLearning() {
         statistics = new HashMap<String, ContextStats>();
@@ -28,8 +19,11 @@ public class ContextDictionary implements Serializable {
     public void learn(ReadData data) {
         String quality = data.getQuality();
         String sequence = data.getSequence();
+
         for (int i = 0; i < sequence.length(); i++) {
+
             String context = ContextHasher.hashContext(i, sequence, quality);
+
             ContextStats stats;
 
             // get the stats array for the current context. create it
@@ -82,7 +76,30 @@ public class ContextDictionary implements Serializable {
         for (Map.Entry<String, ContextStats> entry : statistics.entrySet()) {
             encodingTable.put(entry.getKey(), entry.getValue().buildEncodingTable());
         }
+    }
+    
+    public void readDictionaryFromFile(InputStream inputFile) throws IOException {
 
+        // Read object using ObjectInputStream
+        ObjectInputStream obj_in =
+                new ObjectInputStream (inputFile);
+
+        try {
+            Main.dictionary = (ContextDictionary) obj_in.readObject();
+        }
+        catch(Exception e) {
+            throw new IllegalArgumentException("Input Context Dictionary is invalid");
+        }
     }
 
+    public void writeDictionaryToFile(OutputStream outputFile) throws IOException {
+        ObjectOutputStream outputStream;
+        try {
+            outputStream = new ObjectOutputStream(outputFile);
+            outputStream.writeObject(this);
+        } catch (IOException e) {
+            System.err.println("Error creating the object output stream.");
+            System.err.println(e);
+        }
+    }
 }
