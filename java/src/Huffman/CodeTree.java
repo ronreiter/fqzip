@@ -112,5 +112,8 @@ public final class CodeTree {
 			throw new AssertionError("Illegal node type");
 		}
 	}
-	
+
+    public  char getNextCharFromBitStream(BitInputStream stream) {
+        return 'a';
+    }
 }

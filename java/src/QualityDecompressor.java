@@ -1,4 +1,6 @@
 import Huffman.BitInputStream;
+import Huffman.CodeTree;
+import Huffman.HuffmanDecoder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public class QualityDecompressor implements Decompressor {
     private ContextDictionary dictionary;
-    private BitInputStream bitInputStream;
+    private BitInputStream  bitInputStream;
 
     public void setInput(InputStream input) {
         bitInputStream = new BitInputStream(input);
@@ -23,7 +25,16 @@ public class QualityDecompressor implements Decompressor {
     public void fillNext(ReadData data) {
         for(int i = 0; i < data.getQuality().length(); i++) {
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
-            dictionary.getHuffmanTree(context);
+            CodeTree tree =   dictionary.getHuffmanTree(context);
+            
+            HuffmanDecoder huffmanDec = new HuffmanDecoder(bitInputStream);
+            huffmanDec.codeTree = tree;
+
+            try {
+            data.appendCharToQuality((char)huffmanDec.read());
+            } catch (IOException e) {
+                System.err,println(e.getMessage());
+            }
 
         }
     }
