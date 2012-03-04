@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +15,8 @@ public class ThreadPoolManager {
     private String runMode;
     private Mode runningMode;
     private BufferedReader reader;
+    private BufferedWriter writer;
+    private String inputFile;
     private String outputFile;
 
     public enum Mode {LEARN, COMPRESS, DECOMPRESS}
@@ -25,21 +25,23 @@ public class ThreadPoolManager {
 
         this.numOfThreads = numOfThreads;
         this.runMode = runMode;
+        this.inputFile = inputFile;
         this.outputFile = outputFile;
 
         if(runMode.equals("learn")) {
             runningMode = Mode.LEARN;
         }
         else if(runMode.equals("compress")) {
+            reader = new BufferedReader(new FileReader(inputFile));
             runningMode = Mode.COMPRESS;
         }
         else if(runMode.equals("decompress")) {
+            writer = new BufferedWriter(new FileWriter(outputFile));
             runningMode = Mode.DECOMPRESS;
         }
         else
             throw new IllegalArgumentException("Running mode should be either be learn, compress or decompress!");
 
-        reader = new BufferedReader(new FileReader(inputFile));
     }
     
     public void start() throws InterruptedException {
@@ -69,10 +71,15 @@ public class ThreadPoolManager {
         return null;
     }
     
+    public synchronized void writeRead(ReadData readData) throws IOException {
+        readData.write(writer);
+    }
     public Mode getRunningMode() {
         return runningMode;
     }
-    
+    public String getInputFileName() {
+        return inputFile;
+    }
     public String getOutputFileName() {
         return outputFile;
     }

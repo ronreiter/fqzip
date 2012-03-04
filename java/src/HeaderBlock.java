@@ -1,3 +1,5 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,10 +8,10 @@ import java.util.List;
 
 public class HeaderBlock implements HeaderSerializable {
 
-	static final private int CONSTANT_FIELD = 0;
-	static final private int INCREMENTAL_FIELD = 1;
-	static final private int SMALL_DELTA_FIELD = 2;
-	static final private int LARGE_DELTA_FIELD = 3;
+	static final int CONSTANT_FIELD = 0;
+	static final int INCREMENTAL_FIELD = 1;
+	static final int SMALL_DELTA_FIELD = 2;
+	static final int LARGE_DELTA_FIELD = 3;
 
 	private List<Integer[]> headerData = new ArrayList<Integer[]>();
 	private ArrayList<Field> fields;
@@ -89,20 +91,43 @@ public class HeaderBlock implements HeaderSerializable {
 	}
 
 	@Override
-	public void serialize(OutputStream stream) {
-		// TODO write headers amount (DWord)
-		// TODO write fields amount (Word)
+	public void serialize(DataOutputStream stream) throws IOException {
+		List<Field> numericalHeaderTypes = new ArrayList<Field>();
+		stream.writeShort(fields.size());
+		stream.writeShort(headerData.size());
 
 		// TODO write fields
+		for (Field field : fields) {
+			field.serialize(stream);
+			if (field.getType() != CONSTANT_FIELD) {
+				numericalHeaderTypes.add(field);
+			}
+		}
 
-		// TODO write header data
+		for (Integer[] header : headerData) {
+			for (int i = 0; i < numericalHeaderTypes.size(); i++) {
+				Field field = numericalHeaderTypes.get(i);
+				switch (field.getType()) {
+				case SMALL_DELTA_FIELD:
+					stream.writeShort(((NumericField) field)
+							.serializeNumber(header[i]));
+					break;
+
+				case LARGE_DELTA_FIELD:
+					stream.writeLong(((NumericField) field)
+							.serializeNumber(header[i]));
+					break;
+				}
+
+			}
+		}
 
 	}
 
 	@Override
-	public void parse(InputStream stream) throws IOException {
-		int numHeaders = readDword(stream);
-		int numFields = readWord(stream);
+	public void parse(DataInputStream stream) throws IOException {
+		int numHeaders = stream.readShort();
+		int numFields = stream.readShort();
 
 		for (int i = 0; i < numFields; i++) {
 			readField(stream);
@@ -115,21 +140,21 @@ public class HeaderBlock implements HeaderSerializable {
 
 	}
 
-	private void readField(InputStream stream) throws IOException {
-		int fieldType = readByte(stream);
+	private void readField(DataInputStream stream) throws IOException {
+		int fieldType = stream.readByte();
 
 		switch (fieldType) {
-		case 0: // string
+		case CONSTANT_FIELD: // string
 
 			break;
 
-		case 1: // increment 1 only
+		case INCREMENTAL_FIELD: // increment 1 only
 			break;
 
-		case 3: // read 8 bit increment
+		case SMALL_DELTA_FIELD: // read 8 bit increment
 			break;
 
-		case 4: // read 16 bit increment
+		case LARGE_DELTA_FIELD: // read 16 bit increment
 			break;
 		}
 
@@ -137,33 +162,6 @@ public class HeaderBlock implements HeaderSerializable {
 
 	private void readHeader(InputStream stream) throws IOException {
 
-	}
-
-	private int readDword(InputStream stream) throws IOException {
-		byte[] dword = new byte[4];
-		stream.read(dword);
-		int value = 0;
-		for (int i = 0; i < 4; i++) {
-			int shift = (4 - 1 - i) * 8;
-			value += (dword[i] & 0x000000FF) << shift;
-		}
-		return value;
-	}
-
-	private int readWord(InputStream stream) throws IOException {
-		byte[] dword = new byte[2];
-		stream.read(dword);
-		int value = 0;
-		for (int i = 0; i < 2; i++) {
-			int shift = (4 - 1 - i) * 8;
-			value += (dword[i] & 0x000000FF) << shift;
-		}
-		return value;
-	}
-
-	private int readByte(InputStream stream) throws IOException {
-		int value = stream.read();
-		return value;
 	}
 
 	/*

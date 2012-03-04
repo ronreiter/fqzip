@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -9,14 +11,21 @@ import java.util.zip.ZipInputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class SequenceDecompressor implements Decompressor {
+    GZIPInputStream inputStream;
+
     BufferedReader reader;
 
-    public void setInput(InputStream input) {
-        reader = new BufferedReader(new InputStreamReader(new ZipInputStream(input)));
+    public void setInput(InputStream input) throws IOException {
+        inputStream = new GZIPInputStream(input);
     }
 
     public void fillNext(ReadData data) throws IOException {
 
+        byte[] arr = new byte[100];
+
+        int length = inputStream.read(arr,0,100);
+
+        data.setSequence(length == 0 ? null : new String(arr));
     }
 
     public void closeInput() throws IOException {

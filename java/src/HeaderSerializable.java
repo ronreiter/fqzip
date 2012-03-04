@@ -1,10 +1,9 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 
 public interface HeaderSerializable {
-	public void serialize(OutputStream stream);
+	public void serialize(DataOutputStream stream) throws IOException;
 
-	public void parse(InputStream stream) throws IOException;
+	public void parse(DataInputStream stream) throws IOException;
 }

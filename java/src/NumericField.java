@@ -1,10 +1,15 @@
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class NumericField extends Field {
 
 	private int previousValue, minValue, maxValue,
 			minDelta = Integer.MAX_VALUE, maxDelta = Integer.MIN_VALUE;
+	private Integer lastSerializedNumber;
 
 	public NumericField(int value) {
-		minValue = maxValue = value;
+		// We set lastSerializedNumber for the first call to serializeNumber
+		lastSerializedNumber = minValue = maxValue = value;
 	}
 
 	public void add(int value) {
@@ -13,7 +18,9 @@ public class NumericField extends Field {
 		if (value > maxValue) {
 			maxValue = value;
 		} else if (value < minValue) {
-			minValue = value;
+
+			// We set lastSerializedNumber for the first call to serializeNumber
+			lastSerializedNumber = minValue = value;
 		}
 
 		int delta = value - previousValue;
@@ -24,4 +31,22 @@ public class NumericField extends Field {
 		}
 	}
 
+	public int getType() {
+		if (minDelta == maxDelta && minDelta == 1) {
+			return HeaderBlock.INCREMENTAL_FIELD;
+		} else if (maxDelta < Short.MAX_VALUE && -minDelta < Short.MAX_VALUE) {
+			return HeaderBlock.SMALL_DELTA_FIELD;
+		} else {
+			return HeaderBlock.LARGE_DELTA_FIELD;
+		}
+	}
+
+	public int serializeNumber(Integer integer) {
+		return integer - lastSerializedNumber;
+	}
+
+	@Override
+	public void serialize(DataOutputStream stream) throws IOException {
+		stream.write(minValue);
+	}
 }
