@@ -9,8 +9,6 @@ import java.io.*;
  */
 public class Main {
     public static boolean learnMode = true;
-    public static String decodingTreesFile = "decoding_trees.data";
-    public static String encodingTableFile = "encoding_table.data";
     public static ContextDictionary dictionary;
 
     public static void main(String[] arguments) throws FileNotFoundException, IOException {
