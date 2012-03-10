@@ -1,6 +1,5 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,16 +9,18 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class HeaderDecompressor implements Decompressor {
+    BufferedReader reader;
+
     public void setInput(InputStream input) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        reader = new BufferedReader(new InputStreamReader(new ZipInputStream(input)));
     }
 
-    public String getNext() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String getNext() throws IOException {
+        return reader.readLine();
     }
 
-    public void closeOutput() throws IOException {
-
+    public void closeInput() throws IOException {
+        reader.close();
     }
 
 }
