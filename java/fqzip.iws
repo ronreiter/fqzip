@@ -101,7 +101,7 @@
       <file leaf-file-name="QualityDecompressor.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/QualityDecompressor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="20" selection-start="538" selection-end="538" vertical-scroll-proportion="0.338843">
+            <state line="19" column="22" selection-start="516" selection-end="516" vertical-scroll-proportion="0.25619835">
               <folding />
             </state>
           </provider>
@@ -673,7 +673,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/QualityDecompressor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="20" selection-start="538" selection-end="538" vertical-scroll-proportion="0.338843">
+        <state line="19" column="22" selection-start="516" selection-end="516" vertical-scroll-proportion="0.25619835">
           <folding />
         </state>
       </provider>
