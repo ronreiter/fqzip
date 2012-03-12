@@ -20,7 +20,7 @@ public class QualityLearner implements Compressor {
         try {
             this.outputStream = new ObjectOutputStream(output);
         } catch (IOException e) {
-            System.out.println("Error creating the object output stream.");
+            System.err.println("Error creating the object output stream.");
         }
     }
 

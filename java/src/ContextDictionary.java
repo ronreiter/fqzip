@@ -17,7 +17,6 @@ public class ContextDictionary implements Serializable {
     }
     
     public void learn(ReadData data) {
-
         String quality = data.getQuality();
         String sequence = data.getSequence();
 
@@ -99,8 +98,8 @@ public class ContextDictionary implements Serializable {
             outputStream = new ObjectOutputStream(outputFile);
             outputStream.writeObject(this);
         } catch (IOException e) {
-            System.out.println("Error creating the object output stream.");
-            System.out.println(e);
+            System.err.println("Error creating the object output stream.");
+            System.err.println(e);
         }
     }
 }
