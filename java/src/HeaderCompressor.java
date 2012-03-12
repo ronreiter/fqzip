@@ -1,3 +1,4 @@
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,62 +15,18 @@ public class HeaderCompressor implements Compressor {
 
 	}
 
-	private static class HeaderEncoder {
-		// private class Instrument {
-		// private class Run {
-		// private String flowcellID;
-		//
-		// public Run(String flowcellID) {
-		// this.flowcellID = flowcellID;
-		// }
-		// }
-		//
-		// private HashMap<Integer, Run> runs;
-		// }
-		//
-		// private HashMap<String, Instrument> instruments;
-		// private Instrument instrument;
-
-		/**
-		 * Sets the processed Instrument ID
-		 * 
-		 * @param instrument
-		 *            Instrument ID
-		 */
-		// public void setInstrument(String instrument) {
-		// if (!instrumentExists(instrument)) {
-		// // Add instrument
-		// }
-		// // Set instrument and records
-		// }
-
-		/**
-		 * Sets the processed Run number on instrument
-		 * 
-		 * @param runNumber
-		 *            Run number on instrument
-		 */
-		// public void setRunNumber(int runNumber) {
-		// if (runNumberExists(runNumber)) then {
-		// // Set run number
-		// } else {
-		// // Add run number and set
-		// }
-		// }
-	}
-
 	private static final int SUPERBLOCK_SIZE = 512;
-	private OutputStream output;
+	private DataOutputStream output;
 	private int readRecordsInBlock = 0;
 	private HeaderBlock headerBlock;
 
 	@Override
 	public void setOutput(OutputStream output) {
-		this.output = output;
+		this.output = new DataOutputStream(output);
 	}
 
 	@Override
-	public void compressNext(ReadData data) {
+	public void compressNext(ReadData data) throws IOException {
 
 		String header = data.getHeader();
 
@@ -80,22 +37,17 @@ public class HeaderCompressor implements Compressor {
 			headerBlock.add(header);
 			readRecordsInBlock++;
 			if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
-				writeHeaderBlock(headerBlock);
+				headerBlock.serialize(output);
 				readRecordsInBlock = 0;
 			}
 		}
-
-	}
-
-	private void writeHeaderBlock(HeaderBlock headerBlock2) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void closeOutput() throws IOException {
-		// TODO send last block
-
+		if (headerBlock != null) {
+			headerBlock.serialize(output);
+		}
 		output.close();
 	}
 }
