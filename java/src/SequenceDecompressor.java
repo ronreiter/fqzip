@@ -1,5 +1,5 @@
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,14 +9,17 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class SequenceDecompressor implements Decompressor {
+    BufferedReader reader;
 
-    @Override
-    public void setInput(InputStream output) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void setInput(InputStream input) {
+        reader = new BufferedReader(new InputStreamReader(new ZipInputStream(input)));
     }
 
-    @Override
-    public String getNext() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String getNext() throws IOException {
+        return reader.readLine();
+    }
+
+    public void closeInput() throws IOException {
+        reader.close();
     }
 }

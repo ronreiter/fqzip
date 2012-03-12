@@ -1,3 +1,6 @@
+import Huffman.BitInputStream;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -9,13 +12,20 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class QualityDecompressor implements Decompressor {
-    @Override
-    public void setInput(InputStream output) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    private ContextDictionary dictionary;
+    private BitInputStream bitInputStream;
+
+    public void setInput(InputStream input) {
+        bitInputStream = new BitInputStream(input);
     }
 
-    @Override
     public String getNext() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String context = null;
+        dictionary.getHuffmanTree(context);
+        return null;
+    }
+
+    public void closeInput() throws IOException {
+        bitInputStream.close();
     }
 }

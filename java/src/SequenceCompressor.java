@@ -1,5 +1,8 @@
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,14 +12,18 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class SequenceCompressor implements Compressor {
-
-    @Override
-    public void setOutput(OutputStream input) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    ZipOutputStream outputStream;
+    
+    public void setOutput(OutputStream output) {
+        outputStream = new ZipOutputStream(output);
     }
 
-    @Override
-    public void compressNext(ReadData data) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void compressNext(ReadData data) throws IOException {
+        outputStream.write(data.getSequence().getBytes());
     }
+
+    public void closeOutput() throws IOException {
+        outputStream.close();
+    }
+
 }
