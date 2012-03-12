@@ -22,5 +22,4 @@ public class SequenceDecompressor implements Decompressor {
     public void closeInput() throws IOException {
         reader.close();
     }
-
 }

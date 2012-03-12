@@ -13,5 +13,4 @@ public interface Decompressor {
     void setInput(InputStream input);
     String getNext() throws IOException;
     void closeInput() throws IOException;
-
 }

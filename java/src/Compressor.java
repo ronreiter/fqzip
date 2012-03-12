@@ -13,5 +13,4 @@ public interface Compressor {
     void setOutput(OutputStream output);
     void compressNext(ReadData data) throws IOException;
     void closeOutput() throws IOException;
-
 }

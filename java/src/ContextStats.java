@@ -1,6 +1,7 @@
 import Huffman.CodeTree;
 import Huffman.FrequencyTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Time: 7:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ContextStats {
+public class ContextStats implements Serializable {
     private int[] qualities;
     private int total;
     private CodeTree tree;

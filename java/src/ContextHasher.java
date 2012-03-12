@@ -45,12 +45,6 @@ public class ContextHasher {
         context += ":" + Utils.join(qualities,",");
 
          return context;
-
-
-            
     }
-
-
-
 }
 

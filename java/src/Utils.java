@@ -10,9 +10,6 @@ import java.util.Iterator;
  */
 public class Utils {
 
-
-
-
     public static String join(Collection<?> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         Iterator iter = s.iterator();
