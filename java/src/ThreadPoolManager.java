@@ -12,6 +12,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ThreadPoolManager {
+
     private int numOfThreads;
     private String runMode;
     private Mode runningMode;
@@ -21,6 +22,7 @@ public class ThreadPoolManager {
     public enum Mode {LEARN, COMPRESS, DECOMPRESS}
 
     public ThreadPoolManager(int numOfThreads, String runMode, String inputFile, String outputFile) throws IOException{
+
         this.numOfThreads = numOfThreads;
         this.runMode = runMode;
         this.outputFile = outputFile;
@@ -59,17 +61,19 @@ public class ThreadPoolManager {
 
     public synchronized ReadData getRead() throws IOException {
         ReadData nextRead = new ReadData(reader);
+
         if (nextRead.getHeader() != null) {
             return nextRead;
         }
+
         return null;
     }
     
-    public synchronized Mode getRunningMode() {
+    public Mode getRunningMode() {
         return runningMode;
     }
     
-    public synchronized String getOutputFileName() {
+    public String getOutputFileName() {
         return outputFile;
     }
 }

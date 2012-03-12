@@ -12,12 +12,13 @@ public class Worker implements Runnable {
         this.sequenceNumber = sequenceNumber;
         this.runningMode = manager.getRunningMode();
         this.outputFile = manager.getOutputFileName();
-
     }
 
     @Override
     public void run() {
+
         System.err.println("Worker #" + sequenceNumber + " started.");
+
         try {
             switch (runningMode) {
                 case LEARN:
@@ -35,6 +36,7 @@ public class Worker implements Runnable {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
+
         System.err.println("Worker #" + sequenceNumber + " complete.");
 
     }
@@ -43,7 +45,7 @@ public class Worker implements Runnable {
         QualityLearner qualityLearner = new QualityLearner(Main.dictionary);
 
         qualityLearner.setOutput(new FileOutputStream(Main.TREE_FILENAME));
-        ReadData read = null;
+        ReadData read;
 
         while ((read = manager.getRead()) != null) {
             // get a new read from the input
@@ -54,7 +56,7 @@ public class Worker implements Runnable {
     }
 
     private void compress() throws IOException {
-        ReadData read = null;
+        ReadData read;
 
         Compressor headerCompressor = new HeaderCompressor();
         Compressor sequenceCompressor = new SequenceCompressor();
@@ -78,6 +80,11 @@ public class Worker implements Runnable {
         Decompressor headerDecompressor = new HeaderDecompressor();
         Decompressor sequenceDecompressor = new SequenceDecompressor();
         Decompressor qualityDecompressor = new QualityDecompressor();
+
+        //headerDecompressor
+        //headerDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers" ));
+        //sequenceDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".sequence" ));
+        //qualityDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
 
 
     }
