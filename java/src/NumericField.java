@@ -1,15 +1,24 @@
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class NumericField extends Field {
 
-	private int previousValue, minValue, maxValue,
+	private long previousValue, minValue, maxValue,
 			minDelta = Integer.MAX_VALUE, maxDelta = Integer.MIN_VALUE;
-	private Integer lastSerializedNumber;
+	private long lastSerializedNumber;
+	private Integer fieldType;
 
 	public NumericField(int value) {
 		// We set lastSerializedNumber for the first call to serializeNumber
 		lastSerializedNumber = minValue = maxValue = value;
+	}
+
+	public NumericField(DataInputStream stream, int fieldType)
+			throws IOException {
+
+		this.fieldType = fieldType;
+		minValue = stream.readLong();
 	}
 
 	public void add(int value) {
@@ -23,7 +32,7 @@ public class NumericField extends Field {
 			lastSerializedNumber = minValue = value;
 		}
 
-		int delta = value - previousValue;
+		long delta = value - previousValue;
 		if (delta > maxDelta) {
 			maxDelta = delta;
 		} else if (delta < minDelta) {
@@ -32,21 +41,30 @@ public class NumericField extends Field {
 	}
 
 	public int getType() {
-		if (minDelta == maxDelta && minDelta == 1) {
-			return HeaderBlock.INCREMENTAL_FIELD;
-		} else if (maxDelta < Short.MAX_VALUE && -minDelta < Short.MAX_VALUE) {
-			return HeaderBlock.SMALL_DELTA_FIELD;
+		if (fieldType == null) {
+			if (minDelta == maxDelta && minDelta == 1) {
+				return HeaderBlock.INCREMENTAL_FIELD;
+			} else if (maxDelta < Short.MAX_VALUE
+					&& -minDelta < Short.MAX_VALUE) {
+				return HeaderBlock.SMALL_DELTA_FIELD;
+			} else {
+				return HeaderBlock.LARGE_DELTA_FIELD;
+			}
 		} else {
-			return HeaderBlock.LARGE_DELTA_FIELD;
+			return fieldType;
 		}
 	}
 
-	public int serializeNumber(Integer integer) {
-		return integer - lastSerializedNumber;
+	public long serializeNumber(long number) {
+		return number - lastSerializedNumber;
 	}
 
 	@Override
 	public void serialize(DataOutputStream stream) throws IOException {
-		stream.write(minValue);
+		stream.writeLong(minValue);
+	}
+
+	public long getOffset() {
+		return minValue;
 	}
 }
