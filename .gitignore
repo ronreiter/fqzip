@@ -10,3 +10,5 @@ out
 qualities.out
 *.iws
 java/fqzip.iws
+
+java/fqzip.ipr

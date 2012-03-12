@@ -4,6 +4,7 @@ import java.io.File;
 public class Main {
 
     public static ContextDictionary dictionary;
+    public static final String TREE_FILENAME = "tree.out";
 
     public static void main(String[] arguments) throws IOException {
 
@@ -26,20 +27,18 @@ public class Main {
 
         dictionary = new ContextDictionary();
 
-        Worker worker = numberOfThreads == 0 ? new Worker(arguments[0],1) : new Worker(arguments[0],numberOfThreads);
-
         File inputFile = new File(arguments[1]);
         
         if(! inputFile.exists()) 
             throw new FileNotFoundException("Input File given does not exist");
 
         if(arguments[0].equals("learn")) {
-            worker.run(arguments[1], null);
+            new ThreadPoolManager(1, arguments[0], arguments[1], null).start();
         }
         else {
-            dictionary.readDictionaryFromFile(new FileInputStream("tree.out"));
+            dictionary.readDictionaryFromFile(new FileInputStream(TREE_FILENAME));
             //run manager with the parameters (number of threads and mode)
-            worker.run(arguments[1],arguments[2]);
+            new ThreadPoolManager(1, arguments[0], arguments[1], arguments[2]).start();
         }
     }
 }

@@ -16,10 +16,11 @@ public class ThreadPoolManager {
     private int numberofthreads;
     private Mode runningMode;
     private BufferedReader reader;
+    private String outputFile;
 
     public enum Mode {LEARN, COMPRESS, DECOMPRESS}
 
-    public ThreadPoolManager(int numOfThreads, String runMode, String inputFile) throws IOException{
+    public ThreadPoolManager(int numOfThreads, String runMode, String inputFile, String outputFile) throws IOException{
         this.numberofthreads = numOfThreads;
 
         if(runMode.equals("learn")) {
@@ -32,21 +33,27 @@ public class ThreadPoolManager {
             runningMode = Mode.DECOMPRESS;
         }
         else
-            throw new IllegalArgumentException("Running Mode should be either LEARN/COMPRESS or DECOMPRESS");
+            throw new IllegalArgumentException("Running mode should be either be learn, compress or decompress!");
 
-        FileReader input = new FileReader(inputFile);
-        reader =  new BufferedReader(input);
+        reader = new BufferedReader(new FileReader(inputFile));
     }
     
-    public void Run() {
+    public void start() {
 
         for (int i = 0 ; i < numberofthreads; i++) {
-
-            Thread x = new Thread(new Worker(runningMode,i, this));
+            Thread x = new Thread(new Worker(i, this));
         }
     }
 
     public synchronized ReadData getRead() throws IOException {
         return new ReadData(reader);
+    }
+    
+    public synchronized Mode getRunningMode() {
+        return runningMode;
+    }
+    
+    public synchronized String getOutputFileName() {
+        return outputFile;
     }
 }

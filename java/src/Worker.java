@@ -1,24 +1,20 @@
 import com.sun.xml.internal.bind.v2.model.impl.RuntimeModelBuilder;
 
 import java.io.*;
-import java.util.Vector;
-
-import ThreadPoolManager.Mode;
 
 public class Worker implements Runnable {
 
     private ThreadPoolManager manager;
     private ThreadPoolManager.Mode runningMode;
     private int sequenceNumber;
-    private QualityLearner qualityLearner;
     private String outputFile;
 
-    public Worker(Mode runMode, int sequenceNumber, ThreadPoolManager manager, String outputFile) {
+    public Worker(int sequenceNumber, ThreadPoolManager manager) {
         this.manager = manager;
         this.sequenceNumber = sequenceNumber;
-        this.runningMode = runMode;
+        this.runningMode = manager.getRunningMode();
+        this.outputFile = manager.getOutputFileName();
 
-        qualityLearner = new QualityLearner(Main.dictionary);
     }
 
     @Override
@@ -26,7 +22,7 @@ public class Worker implements Runnable {
         try {
             switch (runningMode) {
                 case LEARN:
-                    learn(qualityLearner, bufferedInput);
+                    learn();
                     break;
 
                 case COMPRESS:
@@ -34,6 +30,7 @@ public class Worker implements Runnable {
                     break;
 
                 case DECOMPRESS:
+                    decompress();
                     break;
             }
         } catch (Exception e) {
@@ -41,13 +38,14 @@ public class Worker implements Runnable {
         }
     }
 
-    private void learn(QualityLearner qualityLearner, BufferedReader bufferedInput) throws IOException {
+    private void learn() throws IOException {
+        QualityLearner qualityLearner = new QualityLearner(Main.dictionary);
 
-        qualityLearner.setOutput(new FileOutputStream("tree.out"));
+        qualityLearner.setOutput(new FileOutputStream(Main.TREE_FILENAME));
+        ReadData read = null;
 
-        while (bufferedInput.ready()) {
+        while ((read = manager.getRead()) != null) {
             // get a new read from the input
-            ReadData read = new ReadData(bufferedInput);
             qualityLearner.compressNext(read);
         }
 
@@ -55,22 +53,31 @@ public class Worker implements Runnable {
     }
 
     private void compress() throws IOException {
+        ReadData read = null;
+
         Compressor headerCompressor = new HeaderCompressor();
         Compressor sequenceCompressor = new SequenceCompressor();
         Compressor qualityCompressor = new QualityCompressor(Main.dictionary);
 
-        headerCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".headers" ));
-        sequenceCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".sequence" ));
-        qualityCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".quality"));
+        headerCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers" ));
+        sequenceCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".sequence" ));
+        qualityCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
 
-        while (bufferedInput.ready()) {
+        while ((read = manager.getRead()) != null) {
             // get a new read from the input
-            ReadData read = new ReadData(bufferedInput);
             headerCompressor.compressNext(read);
             sequenceCompressor.compressNext(read);
             qualityCompressor.compressNext(read);
         }
 
         qualityCompressor.closeOutput();
+    }
+    
+    private void decompress() throws IOException {
+        Decompressor headerDecompressor = new HeaderDecompressor();
+        Decompressor sequenceDecompressor = new SequenceDecompressor();
+        Decompressor qualityDecompressor = new QualityDecompressor();
+
+
     }
 }
