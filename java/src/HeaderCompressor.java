@@ -10,24 +10,24 @@ import java.util.HashMap;
  */
 public class HeaderCompressor implements Compressor {
 	public static void debug() {
-		
+
 	}
 
 	private static class HeaderEncoder {
-//		private class Instrument {
-//			private class Run {
-//				private String flowcellID;
-//
-//				public Run(String flowcellID) {
-//					this.flowcellID = flowcellID;
-//				}
-//			}
-//
-//			private HashMap<Integer, Run> runs;
-//		}
-//
-//		private HashMap<String, Instrument> instruments;
-//		private Instrument instrument;
+		// private class Instrument {
+		// private class Run {
+		// private String flowcellID;
+		//
+		// public Run(String flowcellID) {
+		// this.flowcellID = flowcellID;
+		// }
+		// }
+		//
+		// private HashMap<Integer, Run> runs;
+		// }
+		//
+		// private HashMap<String, Instrument> instruments;
+		// private Instrument instrument;
 
 		/**
 		 * Sets the processed Instrument ID
@@ -148,53 +148,53 @@ public class HeaderCompressor implements Compressor {
 
 	@Override
 	public void compressNext(ReadData data) {
-
-		// TODO store separator template
-		String[] headerFields = splitHeader(data.getHeader());
-		
-		// TODO check header amount doesn't change in superblock
-		int headersAmount = headerFields.length;
-
-		if (readRecordsInSuperblock == 0) {
-
-			// Create fields array
-			fields = new String[SUPERBLOCK_SIZE][headersAmount];
-
-			// Init constant flags and min/max values
-			constantFields = new boolean[headersAmount];
-			maximumValue = new int[headersAmount];
-			minimumValue = new int[headersAmount];
-			for (int i = 0; i < headersAmount; i++) {
-				constantFields[i] = true;
-				try {
-					int numericValue = Integer.parseInt(headerFields[i]);
-					maximumValue[i] = numericValue;
-					minimumValue[i] = numericValue;
-				} catch (NumberFormatException e) {
-					// Non numeric field
-				}
-			}
-			
-		} else {
-
-			for (int i = 0; i < headersAmount; i++) {
-				constantFields[i] &= (headerFields[i].equals(fields[0][i]));
-				try {
-					int numericValue = Integer.parseInt(headerFields[i]);
-					if (numericValue > maximumValue[i]) {
-						maximumValue[i] = numericValue;
-					} else if (numericValue < minimumValue[i]) {
-						minimumValue[i] = numericValue;
-					}
-				} catch (NumberFormatException e) {
-					// Non numeric field
-				}
-			}
-		}
-
-		fields[readRecordsInSuperblock] = headerFields;
-
-		readRecordsInSuperblock++;
+		//
+		// // TODO store separator template
+		// String[] headerFields = splitHeader(data.getHeader());
+		//
+		// // TODO check header amount doesn't change in superblock
+		// int headersAmount = headerFields.length;
+		//
+		// if (readRecordsInSuperblock == 0) {
+		//
+		// // Create fields array
+		// fields = new String[SUPERBLOCK_SIZE][headersAmount];
+		//
+		// // Init constant flags and min/max values
+		// constantFields = new boolean[headersAmount];
+		// maximumValue = new int[headersAmount];
+		// minimumValue = new int[headersAmount];
+		// for (int i = 0; i < headersAmount; i++) {
+		// constantFields[i] = true;
+		// try {
+		// int numericValue = Integer.parseInt(headerFields[i]);
+		// maximumValue[i] = numericValue;
+		// minimumValue[i] = numericValue;
+		// } catch (NumberFormatException e) {
+		// // Non numeric field
+		// }
+		// }
+		//
+		// } else {
+		//
+		// for (int i = 0; i < headersAmount; i++) {
+		// constantFields[i] &= (headerFields[i].equals(fields[0][i]));
+		// try {
+		// int numericValue = Integer.parseInt(headerFields[i]);
+		// if (numericValue > maximumValue[i]) {
+		// maximumValue[i] = numericValue;
+		// } else if (numericValue < minimumValue[i]) {
+		// minimumValue[i] = numericValue;
+		// }
+		// } catch (NumberFormatException e) {
+		// // Non numeric field
+		// }
+		// }
+		// }
+		//
+		// fields[readRecordsInSuperblock] = headerFields;
+		//
+		// readRecordsInSuperblock++;
 
 		// // Store header
 		// rawHeaders[readRecordsInSuperblock++] = data.getHeader();
@@ -224,5 +224,11 @@ public class HeaderCompressor implements Compressor {
 		// }
 		// }
 
+	}
+
+	@Override
+	public void closeOutput() throws IOException {
+		// TODO close output stream
+		
 	}
 }
