@@ -31,9 +31,7 @@ public class Main {
      *                    this mode will search for all files starting with the "test" prefix and decompress
      *                    the groups(files with same sequence number) accordingly
      *
-     *                    the output file is the prefix we will give to all decompressed files.
-     *                    all files will still use the sequence number in the output
-     *                    (Our code DOES NOT output one file (as given in input).
+     *                    the output file is the result of the decompression
      *
      *                    Number of threads will indicate the number of threads to be used for the processing
      *                      IF NO NUMBER IS SPECIFIED, A SINGLE THREAD WILL BE USED FOR THE PROCESSING!
