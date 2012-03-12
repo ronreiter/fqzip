@@ -38,6 +38,7 @@ public class Main {
         }
         else {
             dictionary.readDictionaryFromFile(new FileInputStream("tree.out"));
+            //run manager with the parameters (number of threads and mode)
             worker.run(arguments[1],arguments[2]);
         }
     }

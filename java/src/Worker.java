@@ -1,51 +1,45 @@
+import com.sun.xml.internal.bind.v2.model.impl.RuntimeModelBuilder;
+
 import java.io.*;
 import java.util.Vector;
 
-public class Worker {
+import ThreadPoolManager.Mode;
 
-    private enum Mode {LEARN, COMPRESS, DECOMPRESS}
-    Mode runningMode;
-    private int numberOfThreads;
+public class Worker implements Runnable {
 
-    public Worker(String mode) {
-        if(mode.equals("learn")) {
-            runningMode = Mode.LEARN;
-        }
-        else if(mode.equals("compress")) {
-            runningMode = Mode.COMPRESS;
-        }
-        else if(mode.equals("decompress")) {
-            runningMode = Mode.DECOMPRESS;
-        }
-        else
-            throw new IllegalArgumentException("Running Mode should be either LEARN/COMPRESS or DECOMPRESS");
-    }
-    
-    public Worker(String mode, int numberOfThreads) {
-        this(mode);
-        this.numberOfThreads = numberOfThreads;
+    private ThreadPoolManager manager;
+    private ThreadPoolManager.Mode runningMode;
+    private int sequenceNumber;
+    private QualityLearner qualityLearner;
+    private String outputFile;
+
+    public Worker(Mode runMode, int sequenceNumber, ThreadPoolManager manager, String outputFile) {
+        this.manager = manager;
+        this.sequenceNumber = sequenceNumber;
+        this.runningMode = runMode;
+
+        qualityLearner = new QualityLearner(Main.dictionary);
     }
 
-    public void run(String inputFile, String outputFile) throws FileNotFoundException, IOException {
-        FileReader input = new FileReader(inputFile);
-        BufferedReader bufferedInput = new BufferedReader(input);
+    @Override
+    public void run() {
+        try {
+            switch (runningMode) {
+                case LEARN:
+                    learn(qualityLearner, bufferedInput);
+                    break;
 
-        Vector<Compressor> compressors = new Vector<Compressor>();
-        QualityLearner qualityLearner = new QualityLearner(Main.dictionary);
+                case COMPRESS:
+                    compress();
+                    break;
 
-        switch (runningMode) {
-            case LEARN:
-                learn(qualityLearner, bufferedInput);
-                break;
-
-        case COMPRESS:
-            compress(bufferedInput);
-        break;
-
-        case DECOMPRESS:
-            break;
+                case DECOMPRESS:
+                    break;
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
-}
 
     private void learn(QualityLearner qualityLearner, BufferedReader bufferedInput) throws IOException {
 
@@ -60,14 +54,14 @@ public class Worker {
         qualityLearner.closeOutput();
     }
 
-    private void compress(BufferedReader bufferedInput) throws IOException {
+    private void compress() throws IOException {
         Compressor headerCompressor = new HeaderCompressor();
         Compressor sequenceCompressor = new SequenceCompressor();
         Compressor qualityCompressor = new QualityCompressor(Main.dictionary);
 
-        headerCompressor.setOutput(new FileOutputStream("headers.out"));
-        sequenceCompressor.setOutput(new FileOutputStream("sequences.out"));
-        qualityCompressor.setOutput(new FileOutputStream("qualities.out"));
+        headerCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".headers" ));
+        sequenceCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".sequence" ));
+        qualityCompressor.setOutput(new FileOutputStream(this.outputFile + "." + this.sequenceNumber  + ".quality"));
 
         while (bufferedInput.ready()) {
             // get a new read from the input
@@ -78,13 +72,5 @@ public class Worker {
         }
 
         qualityCompressor.closeOutput();
-    }
-
-
-
-    private void runInThreadPool(Mode runningMode) {
-
-
-
     }
 }
