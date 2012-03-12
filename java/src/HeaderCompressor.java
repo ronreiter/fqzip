@@ -9,6 +9,7 @@ import java.util.HashMap;
  * this template use File | Settings | File Templates.
  */
 public class HeaderCompressor implements Compressor {
+
 	public static void debug() {
 
 	}
@@ -57,93 +58,12 @@ public class HeaderCompressor implements Compressor {
 		// }
 	}
 
-	private static enum Separator {
-		Colon(':'), Period('.'), Space(' '), EqualsSign('='), Slash('/');
-
-		private final char character;
-
-		Separator(char character) {
-			this.character = character;
-		}
-
-		char getCharacter() {
-			return this.character;
-		}
-	}
-
-	private class Field {
-		private int length;
-		private Separator separator;
-
-		Field(int length, Separator separator) {
-			this.length = length;
-			this.separator = separator;
-		}
-
-		public int getLength() {
-			return this.length;
-		}
-	}
-
-	private class NumericField extends Field {
-		private int minValue, maxValue;
-		private boolean deltaEncoding;
-
-		public NumericField(int length, Separator separator, int minValue,
-				int maxValue, boolean deltaEncoding) {
-			super(length, separator);
-			this.minValue = minValue;
-			this.maxValue = maxValue;
-			this.deltaEncoding = deltaEncoding;
-		}
-
-		public int getMinValue() {
-			return this.minValue;
-		}
-
-		public int getMaxValue() {
-			return this.maxValue;
-		}
-
-		public boolean usesDeltaEncoding() {
-			return this.deltaEncoding;
-		}
-	}
-
-	private class NonNumericField extends Field {
-		private static final int VARIABLE_LENGTH = 0;
-		private BitSet bitVector;
-
-		public NonNumericField(int length, Separator separator) {
-			super(length, separator);
-		}
-	}
-
-	private class ConstantField extends Field {
-		private String value;
-
-		public ConstantField(int length, Separator separator, String value) {
-			super(length, separator);
-			this.value = value;
-		}
-
-		public String getValue() {
-			return this.value;
-		}
-	}
-
 	private static final int SUPERBLOCK_SIZE = 512;
-	private static int readRecordsInSuperblock = 0;
-	private static String[][] fields;
-	private static String[] rawHeaders = new String[SUPERBLOCK_SIZE];
-	private static boolean[] constantFields;
-	private static int[] maximumValue;
-	private static int[] minimumValue;
+	private OutputStream output;
 
 	@Override
-	public void setOutput(OutputStream input) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
+	public void setOutput(OutputStream output) {
+		this.output = output;
 	}
 
 	@Override
@@ -228,7 +148,6 @@ public class HeaderCompressor implements Compressor {
 
 	@Override
 	public void closeOutput() throws IOException {
-		// TODO close output stream
-		
+		output.close();
 	}
 }
