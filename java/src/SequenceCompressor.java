@@ -2,6 +2,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -12,10 +13,10 @@ import java.util.zip.ZipOutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class SequenceCompressor implements Compressor {
-    ZipOutputStream outputStream;
+    GZIPOutputStream outputStream;
     
-    public void setOutput(OutputStream output) {
-        outputStream = new ZipOutputStream(output);
+    public void setOutput(OutputStream output) throws IOException {
+        outputStream = new GZIPOutputStream(output);
     }
 
     public void compressNext(ReadData data) throws IOException {

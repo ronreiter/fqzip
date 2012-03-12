@@ -19,6 +19,7 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
+        System.err.println("Worker #" + sequenceNumber + " started.");
         try {
             switch (runningMode) {
                 case LEARN:
@@ -36,6 +37,8 @@ public class Worker implements Runnable {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
+        System.err.println("Worker #" + sequenceNumber + " complete.");
+
     }
 
     private void learn() throws IOException {
