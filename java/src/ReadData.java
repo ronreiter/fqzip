@@ -9,23 +9,32 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class ReadData {
-    private String header;
-    private String sequence;
-    private String quality;
+    private StringBuilder header;
+    private StringBuilder sequence;
+    private StringBuilder quality;
 
     ReadData(BufferedReader reader) throws IOException {
-        header = reader.readLine();
-        sequence = reader.readLine();
+        StringBuilder header = new  StringBuilder(reader.readLine());
+        StringBuilder sequence = new StringBuilder (reader.readLine());
         reader.readLine();
-        quality = reader.readLine();
+        StringBuilder quality =  new StringBuilder (reader.readLine());
     }
     public String getHeader() {
-        return header;
+        return header.toString();
     }
     public String getSequence() {
-        return sequence;
+        return sequence.toString();
     }
     public String getQuality() {
-        return quality;
+        return quality.toString();
+    }
+    public void appendCharToHeader(char character) {
+      header.append(character);
+    }
+    public void appendCharToSequencechar (char character){
+        sequence.append(character);
+    }
+    public void appendCharToQuality(char character) {
+        quality.append(character);
     }
 }
