@@ -12,3 +12,6 @@ qualities.out
 java/fqzip.iws
 
 java/fqzip.ipr
+*.headers
+*.quality
+*.sequence

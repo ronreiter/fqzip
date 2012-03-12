@@ -26,9 +26,11 @@ public class Main {
             new ThreadPoolManager(1, arguments[0], arguments[1], null).start();
         }
         else {
+            System.err.println("Reading dictionary from file...");
             dictionary.readDictionaryFromFile(new FileInputStream(TREE_FILENAME));
             //run manager with the parameters (number of threads and mode)
-            new ThreadPoolManager(1, arguments[0], arguments[1], arguments[2]).start();
+            System.err.println("Dictionary read complete.");
+            new ThreadPoolManager(numberOfThreads, arguments[0], arguments[1], arguments[2]).start();
         }
     }
 }

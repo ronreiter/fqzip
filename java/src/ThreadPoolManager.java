@@ -1,5 +1,3 @@
-import sun.rmi.runtime.NewThreadAction;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +12,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ThreadPoolManager {
-    private int numberofthreads;
+    private int numOfThreads;
     private String runMode;
     private Mode runningMode;
     private BufferedReader reader;
@@ -23,8 +21,9 @@ public class ThreadPoolManager {
     public enum Mode {LEARN, COMPRESS, DECOMPRESS}
 
     public ThreadPoolManager(int numOfThreads, String runMode, String inputFile, String outputFile) throws IOException{
-        this.numberofthreads = numOfThreads;
+        this.numOfThreads = numOfThreads;
         this.runMode = runMode;
+        this.outputFile = outputFile;
 
         if(runMode.equals("learn")) {
             runningMode = Mode.LEARN;
@@ -44,15 +43,15 @@ public class ThreadPoolManager {
     public void start() throws InterruptedException {
         List<Thread> threadList = new ArrayList<Thread>();
         
-        System.err.println("ThreadPoolManager started on " + runMode + " with " +numberofthreads + " threads.");
-        for (int i = 0 ; i < numberofthreads; i++) {
+        System.err.println("ThreadPoolManager started on " + runMode + " with " + numOfThreads + " threads.");
+        for (int i = 0 ; i < numOfThreads; i++) {
             Thread thread = new Thread(new Worker(i, this));
             threadList.add(thread);
             thread.start();
         }
 
         // wait for threads to complete
-        for (int i = 0; i < numberofthreads; i++) {
+        for (int i = 0; i < numOfThreads; i++) {
             threadList.get(i).join();
         }
         System.err.println("ThreadPoolManager complete.");
