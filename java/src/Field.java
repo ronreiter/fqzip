@@ -1,7 +1,7 @@
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Field implements Serializable {
+public class Field implements HeaderSerializable {
 
 	public Field() {
 	}

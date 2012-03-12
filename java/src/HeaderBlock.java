@@ -4,7 +4,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeaderBlock implements Serializable {
+public class HeaderBlock implements HeaderSerializable {
+
+	static final private int CONSTANT_FIELD = 0;
+	static final private int INCREMENTAL_FIELD = 1;
+	static final private int SMALL_DELTA_FIELD = 2;
+	static final private int LARGE_DELTA_FIELD = 3;
 
 	private List<Integer[]> headerData = new ArrayList<Integer[]>();
 	private ArrayList<Field> fields;
@@ -22,17 +27,6 @@ public class HeaderBlock implements Serializable {
 		char getCharacter() {
 			return this.character;
 		}
-	}
-
-	private static enum FieldType {
-		Constant((byte) 0), ConstantOffset((byte) 1), VaryingOffset((byte) 2);
-
-		private final byte byteEncoding;
-
-		FieldType(byte byteEncoding) {
-			this.byteEncoding = byteEncoding;
-		}
-
 	}
 
 	/**
@@ -121,15 +115,15 @@ public class HeaderBlock implements Serializable {
 
 	}
 
-	private void readField(InputStream stream) {
+	private void readField(InputStream stream) throws IOException {
 		int fieldType = readByte(stream);
 
 		switch (fieldType) {
-		case 1: // string
+		case 0: // string
 
 			break;
 
-		case 2: // increment 1 only
+		case 1: // increment 1 only
 			break;
 
 		case 3: // read 8 bit increment
@@ -160,7 +154,7 @@ public class HeaderBlock implements Serializable {
 		byte[] dword = new byte[2];
 		stream.read(dword);
 		int value = 0;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 			int shift = (4 - 1 - i) * 8;
 			value += (dword[i] & 0x000000FF) << shift;
 		}
