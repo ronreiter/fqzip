@@ -6,12 +6,14 @@ public class Worker implements Runnable {
     private ThreadPoolManager.Mode runningMode;
     private int sequenceNumber;
     private String outputFile;
-
+    private String inputFile;
+    
     public Worker(int sequenceNumber, ThreadPoolManager manager) {
         this.manager = manager;
         this.sequenceNumber = sequenceNumber;
         this.runningMode = manager.getRunningMode();
         this.outputFile = manager.getOutputFileName();
+        this.inputFile = manager.getInputFileName();
     }
 
     @Override
@@ -81,11 +83,22 @@ public class Worker implements Runnable {
         Decompressor sequenceDecompressor = new SequenceDecompressor();
         Decompressor qualityDecompressor = new QualityDecompressor();
 
-        //headerDecompressor
-        //headerDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers" ));
-        //sequenceDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".sequence" ));
-        //qualityDecompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
+        headerDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".headers"));
+        sequenceDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".sequence"));
+        qualityDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".quality"));
 
+        while (true) {
+            ReadData nextRead = new ReadData();
+            headerDecompressor.fillNext(nextRead);
+            sequenceDecompressor.fillNext(nextRead);
+            qualityDecompressor.fillNext(nextRead);
+            
+            if (nextRead.getHeader() == null) {
+                break;
+            }
+
+            manager.writeRead(nextRead);            
+        }
 
     }
 }

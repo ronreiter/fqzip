@@ -10,7 +10,7 @@ import java.io.OutputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface Decompressor {
-    void setInput(InputStream input);
+    void setInput(InputStream input) throws IOException;
     void fillNext(ReadData data) throws IOException;
     void closeInput() throws IOException;
 }

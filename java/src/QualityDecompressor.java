@@ -33,7 +33,7 @@ public class QualityDecompressor implements Decompressor {
             try {
             data.appendCharToQuality((char)huffmanDec.read());
             } catch (IOException e) {
-                System.err,println(e.getMessage());
+                System.err.println(e.getMessage());
             }
 
         }

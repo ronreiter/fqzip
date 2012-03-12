@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 
 /**
@@ -13,11 +14,21 @@ public class ReadData {
     private StringBuilder sequence;
     private StringBuilder quality;
 
+    ReadData() throws IOException {
+
+    }
+    
     ReadData(BufferedReader reader) throws IOException {
         StringBuilder header = new  StringBuilder(reader.readLine());
         StringBuilder sequence = new StringBuilder (reader.readLine());
         reader.readLine();
         StringBuilder quality =  new StringBuilder (reader.readLine());
+    }
+    public void write(BufferedWriter writer) throws IOException {
+        writer.write(header.toString());
+        writer.write(sequence.toString());
+        writer.write("+");
+        writer.write(quality.toString());
     }
     public String getHeader() {
         return header.toString();
@@ -36,5 +47,15 @@ public class ReadData {
     }
     public void appendCharToQuality(char character) {
         quality.append(character);
+    }
+
+    public void setHeader(String header) {
+        this.header = new StringBuilder(header);
+    }
+    public void setSequence(String sequence) {
+        this.sequence = new StringBuilder(sequence);
+    }
+    public void setQuality(String quality) {
+        this.quality = new StringBuilder(quality);
     }
 }
