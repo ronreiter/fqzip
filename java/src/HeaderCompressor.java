@@ -60,6 +60,8 @@ public class HeaderCompressor implements Compressor {
 
 	private static final int SUPERBLOCK_SIZE = 512;
 	private OutputStream output;
+	private int readRecordsInBlock = 0;
+	private HeaderBlock headerBlock;
 
 	@Override
 	public void setOutput(OutputStream output) {
@@ -68,6 +70,17 @@ public class HeaderCompressor implements Compressor {
 
 	@Override
 	public void compressNext(ReadData data) {
+
+		String header = data.getHeader();
+
+		if (readRecordsInBlock == 0) {
+			headerBlock = new HeaderBlock(header);
+			readRecordsInBlock++;
+		} else if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
+			writeHeaderBlock(headerBlock);
+			readRecordsInBlock = 0;
+		}
+
 		//
 		// // TODO store separator template
 		// String[] headerFields = splitHeader(data.getHeader());
@@ -146,8 +159,15 @@ public class HeaderCompressor implements Compressor {
 
 	}
 
+	private void writeHeaderBlock(HeaderBlock headerBlock2) {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Override
 	public void closeOutput() throws IOException {
+		// TODO send last block
+
 		output.close();
 	}
 }
