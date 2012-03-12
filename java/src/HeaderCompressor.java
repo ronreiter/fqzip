@@ -76,86 +76,14 @@ public class HeaderCompressor implements Compressor {
 		if (readRecordsInBlock == 0) {
 			headerBlock = new HeaderBlock(header);
 			readRecordsInBlock++;
-		} else if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
-			writeHeaderBlock(headerBlock);
-			readRecordsInBlock = 0;
+		} else {
+			headerBlock.add(header);
+			readRecordsInBlock++;
+			if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
+				writeHeaderBlock(headerBlock);
+				readRecordsInBlock = 0;
+			}
 		}
-
-		//
-		// // TODO store separator template
-		// String[] headerFields = splitHeader(data.getHeader());
-		//
-		// // TODO check header amount doesn't change in superblock
-		// int headersAmount = headerFields.length;
-		//
-		// if (readRecordsInSuperblock == 0) {
-		//
-		// // Create fields array
-		// fields = new String[SUPERBLOCK_SIZE][headersAmount];
-		//
-		// // Init constant flags and min/max values
-		// constantFields = new boolean[headersAmount];
-		// maximumValue = new int[headersAmount];
-		// minimumValue = new int[headersAmount];
-		// for (int i = 0; i < headersAmount; i++) {
-		// constantFields[i] = true;
-		// try {
-		// int numericValue = Integer.parseInt(headerFields[i]);
-		// maximumValue[i] = numericValue;
-		// minimumValue[i] = numericValue;
-		// } catch (NumberFormatException e) {
-		// // Non numeric field
-		// }
-		// }
-		//
-		// } else {
-		//
-		// for (int i = 0; i < headersAmount; i++) {
-		// constantFields[i] &= (headerFields[i].equals(fields[0][i]));
-		// try {
-		// int numericValue = Integer.parseInt(headerFields[i]);
-		// if (numericValue > maximumValue[i]) {
-		// maximumValue[i] = numericValue;
-		// } else if (numericValue < minimumValue[i]) {
-		// minimumValue[i] = numericValue;
-		// }
-		// } catch (NumberFormatException e) {
-		// // Non numeric field
-		// }
-		// }
-		// }
-		//
-		// fields[readRecordsInSuperblock] = headerFields;
-		//
-		// readRecordsInSuperblock++;
-
-		// // Store header
-		// rawHeaders[readRecordsInSuperblock++] = data.getHeader();
-		//
-		// // Split first line, resolve fields
-		// if (readRecordsInSuperblock == SUPERBLOCK_SIZE) {
-		//
-		// // Identify constant fields
-		//
-		//
-		// fields = getSuperblockFields();
-		//
-		//
-		//
-		// for (Field f : fields) {
-		// if (f instanceof NumericField) {
-		// if (((NumericField) f).usesDeltaEncoding()) {
-		// // TODO get delta
-		// } else {
-		// // TODO get value
-		// }
-		// }
-		//
-		// if (f instanceof NonNumericField) {
-		// // TODO
-		// }
-		// }
-		// }
 
 	}
 
