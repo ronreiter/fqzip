@@ -10,19 +10,24 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class ReadData {
-    private StringBuilder header;
-    private StringBuilder sequence;
-    private StringBuilder quality;
+    private StringBuilder header = null;
+    private StringBuilder sequence = null;
+    private StringBuilder quality = null;
 
     ReadData() throws IOException {
 
     }
     
     ReadData(BufferedReader reader) throws IOException {
-        StringBuilder header = new  StringBuilder(reader.readLine());
-        StringBuilder sequence = new StringBuilder (reader.readLine());
+        String headerLine = reader.readLine();
+        if (headerLine == null) {
+            return;
+        }
+
+        header = new StringBuilder(headerLine);
+        sequence = new StringBuilder (reader.readLine());
         reader.readLine();
-        StringBuilder quality =  new StringBuilder (reader.readLine());
+        quality =  new StringBuilder (reader.readLine());
     }
     public void write(BufferedWriter writer) throws IOException {
         writer.write(header.toString());
@@ -31,13 +36,13 @@ public class ReadData {
         writer.write(quality.toString());
     }
     public String getHeader() {
-        return header.toString();
+        return header != null ? header.toString() : null;
     }
     public String getSequence() {
-        return sequence.toString();
+        return sequence != null ? sequence.toString() : null;
     }
     public String getQuality() {
-        return quality.toString();
+        return quality != null ? quality.toString() : null;
     }
     public void appendCharToHeader(char character) {
       header.append(character);

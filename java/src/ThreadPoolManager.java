@@ -29,6 +29,7 @@ public class ThreadPoolManager {
         this.outputFile = outputFile;
 
         if(runMode.equals("learn")) {
+            reader = new BufferedReader(new FileReader(inputFile));
             runningMode = Mode.LEARN;
         }
         else if(runMode.equals("compress")) {
