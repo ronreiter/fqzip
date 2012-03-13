@@ -2,13 +2,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ron
- * Date: 12/14/11
- * Time: 12:59 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ReadData {
     private StringBuilder header = null;
     private StringBuilder sequence = null;
