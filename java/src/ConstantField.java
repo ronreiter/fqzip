@@ -2,7 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ConstantField extends Field {
+public class ConstantField implements Field {
 	private String value;
 
 	public ConstantField(String value) {
@@ -27,5 +27,10 @@ public class ConstantField extends Field {
 	public String getValue() {
 		return this.value;
 	}
+    
+    @Override
+    public int getType() {
+        return HeaderBlock.CONSTANT_FIELD;
+    }
 
 }

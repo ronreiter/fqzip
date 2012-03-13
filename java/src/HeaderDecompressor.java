@@ -1,3 +1,5 @@
+import org.apache.tools.bzip2.CBZip2InputStream;
+
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
@@ -8,6 +10,7 @@ import java.util.zip.ZipInputStream;
  */
 public class HeaderDecompressor implements Decompressor {
 
+    /*
     GZIPInputStream inputStream;
 
     BufferedReader reader;
@@ -29,30 +32,33 @@ public class HeaderDecompressor implements Decompressor {
 
     public void closeInput() throws IOException {
         reader.close();
-    }
+    }*/
 
-    /*
-    InputStream input;
+	DataInputStream input;
 	HeaderBlock headerBlock;
 
-	public void setInput(InputStream input) {
-		this.input = input;
+	public void setInput(InputStream input) throws IOException {
+		this.input = new DataInputStream(new CBZip2InputStream(input));
 	}
 
 	public void fillNext(ReadData data) throws IOException {
 		if (headerBlock == null) {
 			headerBlock = new HeaderBlock(input);
 		}
+
 		String header = headerBlock.nextHeader();
-		if (header != null) {
-			data.setHeader(header);
-		} else {
-			headerBlock = null;
-		}
+
+        if (header == null) {
+            headerBlock = new HeaderBlock(input);
+            header = headerBlock.nextHeader();
+        }
+
+        data.setHeader(header);
+
 	}
 
 	public void closeInput() throws IOException {
 		input.close();
-	}*/
+	}
 
 }

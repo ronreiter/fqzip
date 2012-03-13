@@ -45,7 +45,7 @@ public class ThreadPoolManager {
 
     }
     
-    public void start() throws InterruptedException {
+    public void start() throws InterruptedException, IOException {
         List<Thread> threadList = new ArrayList<Thread>();
         
         System.err.println("ThreadPoolManager started on " + runMode + " with " + numOfThreads + " threads.");
@@ -58,6 +58,14 @@ public class ThreadPoolManager {
         // wait for threads to complete
         for (int i = 0; i < numOfThreads; i++) {
             threadList.get(i).join();
+        }
+        
+        if (reader != null) {
+            reader.close();
+        }
+        
+        if (writer != null) {
+            writer.close();
         }
         System.err.println("ThreadPoolManager complete.");
     }

@@ -15,3 +15,5 @@ java/fqzip.ipr
 *.headers
 *.quality
 *.sequence
+
+java/SRR062634.filt.fastq.decompressed

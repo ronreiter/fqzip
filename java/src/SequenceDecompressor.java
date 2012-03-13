@@ -1,22 +1,14 @@
-import java.io.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipInputStream;
+import org.apache.tools.bzip2.CBZip2InputStream;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ron
- * Date: 12/14/11
- * Time: 1:13 AM
- * To change this template use File | Settings | File Templates.
- */
+import java.io.*;
+
 public class SequenceDecompressor implements Decompressor {
-    GZIPInputStream inputStream;
+    CBZip2InputStream inputStream;
 
     BufferedReader reader;
 
     public void setInput(InputStream input) throws IOException {
-        inputStream = new GZIPInputStream(input);
+        inputStream = new CBZip2InputStream(input);
     }
 
     public void fillNext(ReadData data) throws IOException {
@@ -30,6 +22,6 @@ public class SequenceDecompressor implements Decompressor {
     }
 
     public void closeInput() throws IOException {
-        reader.close();
+        inputStream.close();
     }
 }
