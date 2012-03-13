@@ -18,7 +18,7 @@ public class HeaderCompressor implements Compressor {
 	private static final int SUPERBLOCK_SIZE = 512;
 	private DataOutputStream output;
 	private int readRecordsInBlock = 0;
-	private HeaderBlock headerBlock;
+	private HeaderBlock headerBlock = null;
 
 	@Override
 	public void setOutput(OutputStream output) {
@@ -30,17 +30,19 @@ public class HeaderCompressor implements Compressor {
 
 		String header = data.getHeader();
 
-		if (readRecordsInBlock == 0) {
+		if (headerBlock == null) {
 			headerBlock = new HeaderBlock(header);
-			readRecordsInBlock++;
-		} else {
-			headerBlock.add(header);
-			readRecordsInBlock++;
-			if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
-				headerBlock.serialize(output);
-				readRecordsInBlock = 0;
-			}
 		}
+
+        readRecordsInBlock++;
+        headerBlock.add(header);
+
+        if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
+            headerBlock.serialize(output);
+            readRecordsInBlock = 0;
+            headerBlock = null;
+        }
+
 	}
 
 	@Override

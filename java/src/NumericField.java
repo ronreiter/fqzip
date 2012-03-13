@@ -5,11 +5,11 @@ import java.io.IOException;
 public class NumericField extends Field {
 
 	private long previousValue, minValue, maxValue,
-			minDelta = Integer.MAX_VALUE, maxDelta = Integer.MIN_VALUE;
+			minDelta = Short.MAX_VALUE, maxDelta = Short.MIN_VALUE;
 	private long lastSerializedNumber;
 	private Integer fieldType;
 
-	public NumericField(int value) {
+	public NumericField(long value) {
 		// We set lastSerializedNumber for the first call to serializeNumber
 		lastSerializedNumber = minValue = maxValue = value;
 	}

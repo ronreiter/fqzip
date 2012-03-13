@@ -27,5 +27,10 @@ public class ConstantField extends Field {
 	public String getValue() {
 		return this.value;
 	}
+    
+    @Override
+    public int getType() {
+        return HeaderBlock.CONSTANT_FIELD;
+    }
 
 }

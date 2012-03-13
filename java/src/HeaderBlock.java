@@ -13,11 +13,12 @@ public class HeaderBlock implements HeaderSerializable {
 	static final int SMALL_DELTA_FIELD = 2;
 	static final int LARGE_DELTA_FIELD = 3;
 
-	private List<Long[]> headerData = new ArrayList<Long[]>();
-	private ArrayList<Field> fields;
+	private List<Long[]> headerData;
+	private List<Field> fields;
 	private int fieldsAmount;
 	private String separators;
 	private int readHeaders = 0;
+    private int numberOfNumericFields = 0;
 
 	private static enum Separator {
 		Colon(':'), Period('.'), Space(' '), EqualsSign('='), Slash('/');
@@ -43,20 +44,32 @@ public class HeaderBlock implements HeaderSerializable {
 		String[] splitHeader = splitHeader(header);
 		separators = getSeparators(header);
 		fieldsAmount = splitHeader.length;
-		ArrayList<Integer> numericFields = new ArrayList<Integer>();
-
+        fields = new ArrayList<Field>();
+        headerData = new ArrayList<Long[]>();
+        
 		for (int i = 0; i < fieldsAmount; i++) {
-			try {
-				int value = Integer.parseInt(splitHeader[i]);
-				fields.set(i, new NumericField(value));
-				numericFields.add(value);
-			} catch (NumberFormatException e) {
-				fields.set(i, new ConstantField(splitHeader[i]));
+            Field field;
+            boolean isNumeric = true;
+
+            for (int c = 0; c < splitHeader[i].length(); c++) {
+                if (!Character.isDigit(splitHeader[i].charAt(c))) {
+                    isNumeric = false;
+                    break;
+                }
+
+            }
+
+			if (isNumeric) {
+				long value = Integer.parseInt(splitHeader[i]);
+				field = new NumericField(value);
+                numberOfNumericFields++;
+			} else {
+				field = new ConstantField(splitHeader[i]);
 			}
+
+            System.out.println("Adding field type: " + field.getType());
+            fields.add(field);
 		}
-
-		headerData.add((Long[]) numericFields.toArray());
-
 	}
 
 	public HeaderBlock(InputStream stream) throws IOException {
@@ -87,14 +100,16 @@ public class HeaderBlock implements HeaderSerializable {
 			return false;
 		}
 
-		ArrayList<Integer> numericFields = new ArrayList<Integer>();
+		Long[] numericFields = new Long[numberOfNumericFields];
 
 		// Constant fields check
+        int numericIndex = 0;
 		for (int i = 0; i < fieldsAmount; i++) {
 			try {
-				int value = Integer.parseInt(splitHeader[i]);
-				fields.set(i, new NumericField(value));
-				numericFields.add(value);
+				long value = Integer.parseInt(splitHeader[i]);
+				fields.set(numericIndex, new NumericField(value));
+				numericFields[numericIndex] = value;
+                numericIndex++;
 			} catch (NumberFormatException e) {
 				if (!(fields.get(i) instanceof ConstantField)) {
 					return false;
@@ -102,7 +117,7 @@ public class HeaderBlock implements HeaderSerializable {
 			}
 		}
 
-		headerData.add((Long[]) numericFields.toArray());
+		headerData.add(numericFields);
 
 		return true;
 	}
@@ -113,10 +128,16 @@ public class HeaderBlock implements HeaderSerializable {
 		stream.write(separators.length());
 		stream.writeChars(separators);
 		stream.writeShort(headerData.size());
+        
+        System.out.println(separators.length());
+        System.out.println(separators);
+        System.out.println("number of headers: " + headerData.size());
 
 		// write fields
 		for (Field field : fields) {
 			field.serialize(stream);
+            System.out.println(field.getClass().getName());
+            System.out.println(field.getType());
 			if (field.getType() != CONSTANT_FIELD) {
 				numericalHeaderTypes.add(field);
 			}
@@ -127,7 +148,7 @@ public class HeaderBlock implements HeaderSerializable {
 				Field field = numericalHeaderTypes.get(i);
 				switch (field.getType()) {
 				case SMALL_DELTA_FIELD:
-					stream.writeShort((int) ((NumericField) field)
+					stream.writeShort((short) ((NumericField) field)
 							.serializeNumber(header[i]));
 					break;
 
