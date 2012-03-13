@@ -29,8 +29,6 @@ public class HeaderBlock implements HeaderSerializable {
 	 *            the first header in the block.
 	 */
 	public HeaderBlock(String header) {
-        System.out.println("Building header block with header " + header);
-
 		String[] splitHeader = splitHeader(header);
 		separators = getSeparators(header);
 		fieldsAmount = splitHeader.length;
@@ -57,8 +55,6 @@ public class HeaderBlock implements HeaderSerializable {
 				field = new ConstantField(splitHeader[i]);
 			}
 
-            //System.out.println("Adding field type: " + field.getType());
-            //System.out.println(field.getClass());
             fields.add(field);
 		}
 	}
@@ -112,8 +108,6 @@ public class HeaderBlock implements HeaderSerializable {
 		stream.writeChars(separators);
 		stream.writeShort(headerData.size());
         
-        System.out.println("number of headers: " + headerData.size());
-
 		// write fields
 		for (Field field : fields) {
 			field.serialize(stream);
