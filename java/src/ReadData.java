@@ -55,12 +55,12 @@ public class ReadData {
     }
 
     public void setHeader(String header) {
-        this.header = new StringBuilder(header);
+        this.header = header != null ? new StringBuilder(header) : null;
     }
     public void setSequence(String sequence) {
-        this.sequence = new StringBuilder(sequence);
+        this.sequence = sequence != null ? new StringBuilder(sequence) : null;
     }
     public void setQuality(String quality) {
-        this.quality = new StringBuilder(quality);
+        this.quality = quality != null ? new StringBuilder(quality) : null;
     }
 }

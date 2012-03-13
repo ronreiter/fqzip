@@ -2,12 +2,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class NumericField extends Field {
+public class NumericField implements Field {
 
 	private long previousValue, minValue, maxValue,
-			minDelta = Short.MAX_VALUE, maxDelta = Short.MIN_VALUE;
+			minDelta = Short.MAX_VALUE / 2, maxDelta = Short.MIN_VALUE / 2;
 	private long lastSerializedNumber;
-	private Integer fieldType;
+    private Integer fieldType;
 
 	public NumericField(long value) {
 		// We set lastSerializedNumber for the first call to serializeNumber
@@ -44,8 +44,8 @@ public class NumericField extends Field {
 		if (fieldType == null) {
 			if (minDelta == maxDelta && minDelta == 1) {
 				return HeaderBlock.INCREMENTAL_FIELD;
-			} else if (maxDelta < Short.MAX_VALUE
-					&& -minDelta < Short.MAX_VALUE) {
+			} else if (maxDelta < Short.MAX_VALUE / 2
+					&& -minDelta < Short.MAX_VALUE / 2) {
 				return HeaderBlock.SMALL_DELTA_FIELD;
 			} else {
 				return HeaderBlock.LARGE_DELTA_FIELD;

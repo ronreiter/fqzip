@@ -18,13 +18,16 @@ public class HeaderDecompressor implements Decompressor {
 		if (headerBlock == null) {
 			headerBlock = new HeaderBlock(input);
 		}
+
 		String header = headerBlock.nextHeader();
-        System.out.println("Header: " + header);
-		if (header != null) {
-			data.setHeader(header);
-		} else {
-			headerBlock = null;
-		}
+
+        if (header == null) {
+            headerBlock = new HeaderBlock(input);
+            header = headerBlock.nextHeader();
+        }
+
+        data.setHeader(header);
+
 	}
 
 	public void closeInput() throws IOException {

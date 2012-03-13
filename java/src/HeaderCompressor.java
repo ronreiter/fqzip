@@ -14,7 +14,6 @@ public class HeaderCompressor implements Compressor {
 
 	}
 
-	private static final int SUPERBLOCK_SIZE = 512;
 	private DataOutputStream output;
 	private int readRecordsInBlock = 0;
 	private HeaderBlock headerBlock = null;
@@ -28,20 +27,18 @@ public class HeaderCompressor implements Compressor {
 	public void compressNext(ReadData data) throws IOException {
 
 		String header = data.getHeader();
-
+        
 		if (headerBlock == null) {
 			headerBlock = new HeaderBlock(header);
 		}
 
-        readRecordsInBlock++;
-        headerBlock.add(header);
-
-        if (readRecordsInBlock == SUPERBLOCK_SIZE - 1) {
+        // try adding the header to the current block.
+        // this might fail either because the superblock is full,
+        // or if there is a mismatch.
+        if (!headerBlock.add(header)) {
             headerBlock.serialize(output);
-            readRecordsInBlock = 0;
-            headerBlock = null;
+            headerBlock = new HeaderBlock(header);
         }
-
 	}
 
 	@Override

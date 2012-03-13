@@ -2,7 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ConstantField extends Field {
+public class ConstantField implements Field {
 	private String value;
 
 	public ConstantField(String value) {
