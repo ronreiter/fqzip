@@ -17,3 +17,5 @@ java/fqzip.ipr
 *.sequence
 
 java/SRR062634.filt.fastq.decompressed
+java/fqzip.iws~
+
