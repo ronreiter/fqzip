@@ -139,6 +139,9 @@ public class HeaderBlock implements HeaderSerializable {
 	public void parse(DataInputStream stream) throws IOException {
 		int length = stream.read();
 		StringBuilder buffer = new StringBuilder(length);
+        fields = new ArrayList<Field>();
+        headerData = new ArrayList<Long[]>();
+
 		for (int i = 0; i < length; i++) {
 			buffer.append(stream.readChar());
 		}
