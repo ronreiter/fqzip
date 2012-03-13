@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by IntelliJ IDEA. User: ron Date: 12/14/11 Time: 1:15 AM To change
@@ -11,6 +12,21 @@ import java.util.HashMap;
  */
 public class HeaderCompressor implements Compressor {
 
+    GZIPOutputStream outputStream;
+
+    public void setOutput(OutputStream output) throws IOException {
+        outputStream = new GZIPOutputStream(output);
+    }
+
+    public void compressNext(ReadData data) throws IOException {
+        outputStream.write(data.getHeader().getBytes());
+    }
+
+    public void closeOutput() throws IOException {
+        outputStream.close();
+    }
+
+    /*
 	public static void debug() {
 
 	}
@@ -49,5 +65,5 @@ public class HeaderCompressor implements Compressor {
 			headerBlock.serialize(output);
 		}
 		output.close();
-	}
+	}*/
 }

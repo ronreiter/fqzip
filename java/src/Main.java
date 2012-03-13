@@ -14,7 +14,6 @@ public class Main {
      *
      * compress mode    - the compress mode will be called: "java FQZIP.jar compress input_file output_file #ofThreads"
      *
-     *                    the input file will be the file we read from and generate the compressed data
      *                    INPUT FILE MUST BE GIVEN AS A RELATIVE PATH OR FULL PATH TO AN EXISTING PATH
      *
      *                    the output file will be a prefix of the generated file. For example (given output: "test"):

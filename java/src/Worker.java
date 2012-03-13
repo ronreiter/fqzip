@@ -69,19 +69,22 @@ public class Worker implements Runnable {
         qualityCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
 
         while ((read = manager.getRead()) != null) {
+            
             // get a new read from the input
             headerCompressor.compressNext(read);
             sequenceCompressor.compressNext(read);
             qualityCompressor.compressNext(read);
         }
 
+        headerCompressor.closeOutput();
+        sequenceCompressor.closeOutput();
         qualityCompressor.closeOutput();
     }
     
     private void decompress() throws IOException {
         Decompressor headerDecompressor = new HeaderDecompressor();
         Decompressor sequenceDecompressor = new SequenceDecompressor();
-        Decompressor qualityDecompressor = new QualityDecompressor();
+        Decompressor qualityDecompressor = new QualityDecompressor(Main.dictionary);
 
         headerDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".headers"));
         sequenceDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".sequence"));
@@ -89,6 +92,7 @@ public class Worker implements Runnable {
 
         while (true) {
             ReadData nextRead = new ReadData();
+
             headerDecompressor.fillNext(nextRead);
             sequenceDecompressor.fillNext(nextRead);
             qualityDecompressor.fillNext(nextRead);
