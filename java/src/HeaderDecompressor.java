@@ -23,7 +23,8 @@ public class HeaderDecompressor implements Decompressor {
         //int length = inputStream.read(arr,0,100);
         int length = inputStream.read(arr);
         
-        data.setHeader(length == 0 ? null : new String(arr));
+        if(length != -1)
+            data.setHeader(new String(arr));
     }
 
     public void closeInput() throws IOException {

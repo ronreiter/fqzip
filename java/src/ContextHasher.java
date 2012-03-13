@@ -31,7 +31,7 @@ public class ContextHasher {
         String context = "" + (position / POSITION_DIVISION) + ":";
     
         for (int i = Math.max(position - SEQUENCE_BACKWARDS, 0);
-             i < Math.min(position + SEQUENCE_FORWARD, SEQUENCE_SIZE); i++) {
+             i <= Math.min(position + SEQUENCE_FORWARD, SEQUENCE_SIZE - 1); i++) {
             context += sequenceContext.charAt(i);
         }
 

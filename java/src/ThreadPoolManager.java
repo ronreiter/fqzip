@@ -84,4 +84,8 @@ public class ThreadPoolManager {
     public String getOutputFileName() {
         return outputFile;
     }
+    
+    public void closeWriter() throws IOException{
+        writer.close();
+    }
 }

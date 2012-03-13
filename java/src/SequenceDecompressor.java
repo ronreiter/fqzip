@@ -25,7 +25,8 @@ public class SequenceDecompressor implements Decompressor {
 
         int length = inputStream.read(arr,0,100);
 
-        data.setSequence(length == 0 ? null : new String(arr));
+        if(length != -1)
+            data.setSequence(new String(arr));
     }
 
     public void closeInput() throws IOException {

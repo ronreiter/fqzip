@@ -15,7 +15,7 @@ public class ReadData {
     private StringBuilder quality = null;
 
     ReadData() throws IOException {
-
+        quality = new StringBuilder();
     }
     
     ReadData(BufferedReader reader) throws IOException {
@@ -31,9 +31,13 @@ public class ReadData {
     }
     public void write(BufferedWriter writer) throws IOException {
         writer.write(header.toString());
+        writer.newLine();
         writer.write(sequence.toString());
+        writer.newLine();
         writer.write("+");
+        writer.newLine();
         writer.write(quality.toString());
+        writer.newLine();
     }
     public String getHeader() {
         return header != null ? header.toString() : null;
