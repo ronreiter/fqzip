@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class ContextDictionary implements Serializable {
 
-    private  Map<String, CodeTree> huffmanTreeTable;
-    private  Map<String, List<List<Integer>>> encodingTable;
-    private  Map<String, ContextStats> statistics;
+    private Map<String, CodeTree> huffmanTreeTable;
+    private Map<String, List<List<Integer>>> encodingTable;
+    private transient Map<String, ContextStats> statistics;
     
     public void startLearning() {
         statistics = new HashMap<String, ContextStats>();

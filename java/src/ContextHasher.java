@@ -13,8 +13,8 @@ public class ContextHasher {
     private static final int SEQUENCE_FORWARD = 1;
     private static final int SEQUENCE_BACKWARDS = 1;
     private static final int QUALITY_BACKWARDS = 1;
-    private static final int POSITION_DIVISION = 10;
-    private static final int QUALITY_DIVISION = 5;
+    private static final int POSITION_DIVISION = 20;
+    private static final int QUALITY_DIVISION = 10;
     private static final int SEQUENCE_SIZE = 100;
 
     ContextHasher() {

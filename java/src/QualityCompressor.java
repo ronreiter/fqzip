@@ -6,13 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ron
- * Date: 12/14/11
- * Time: 1:14 AM
- * To change this template use File | Settings | File Templates.
- */
 public class QualityCompressor implements Compressor {
     private ContextDictionary dictionary;
     private BitOutputStream bitOutputStream;
