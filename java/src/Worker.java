@@ -64,7 +64,7 @@ public class Worker implements Runnable {
         Compressor sequenceCompressor = new SequenceCompressor();
         Compressor qualityCompressor = new QualityCompressor(Main.dictionary);
 
-        headerCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers" ));
+        headerCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".headers"));
         sequenceCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".sequence" ));
         qualityCompressor.setOutput(new FileOutputStream(outputFile + "." + sequenceNumber  + ".quality"));
 
@@ -75,6 +75,8 @@ public class Worker implements Runnable {
             qualityCompressor.compressNext(read);
         }
 
+        headerCompressor.closeOutput();
+        sequenceCompressor.closeOutput();
         qualityCompressor.closeOutput();
     }
     
@@ -83,22 +85,30 @@ public class Worker implements Runnable {
         Decompressor sequenceDecompressor = new SequenceDecompressor();
         Decompressor qualityDecompressor = new QualityDecompressor();
 
-        headerDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".headers"));
-        sequenceDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".sequence"));
-        qualityDecompressor.setInput(new FileInputStream(inputFile + "." + sequenceNumber + ".quality"));
+        FileInputStream headerInput = new FileInputStream(inputFile + "." + sequenceNumber + ".headers");
+        FileInputStream sequenceInput = new FileInputStream(inputFile + "." + sequenceNumber + ".sequence");
+        FileInputStream qualityInput = new FileInputStream(inputFile + "." + sequenceNumber + ".quality");
+
+        headerDecompressor.setInput(headerInput);
+        sequenceDecompressor.setInput(sequenceInput);
+        qualityDecompressor.setInput(qualityInput);
 
         while (true) {
             ReadData nextRead = new ReadData();
             headerDecompressor.fillNext(nextRead);
             sequenceDecompressor.fillNext(nextRead);
             qualityDecompressor.fillNext(nextRead);
-            
+
             if (nextRead.getHeader() == null) {
                 break;
             }
 
-            manager.writeRead(nextRead);            
+            manager.writeRead(nextRead);
         }
+
+        headerDecompressor.closeInput();
+        sequenceDecompressor.closeInput();
+        qualityDecompressor.closeInput();
 
     }
 }

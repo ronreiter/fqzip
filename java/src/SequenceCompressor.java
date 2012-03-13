@@ -1,26 +1,18 @@
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipOutputStream;
+import org.apache.tools.bzip2.CBZip2OutputStream;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ron
- * Date: 12/14/11
- * Time: 1:13 AM
- * To change this template use File | Settings | File Templates.
- */
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class SequenceCompressor implements Compressor {
-    GZIPOutputStream outputStream;
+    CBZip2OutputStream outputStream;
     
     public void setOutput(OutputStream output) throws IOException {
-        outputStream = new GZIPOutputStream(output);
+        outputStream = new CBZip2OutputStream(output);
     }
 
     public void compressNext(ReadData data) throws IOException {
-        outputStream.write(data.getSequence().getBytes());
+        byte[] sequenceData = data.getSequence().getBytes();
+        outputStream.write(sequenceData);
     }
 
     public void closeOutput() throws IOException {

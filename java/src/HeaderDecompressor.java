@@ -1,6 +1,6 @@
+import org.apache.tools.bzip2.CBZip2InputStream;
+
 import java.io.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by IntelliJ IDEA. User: ron Date: 12/14/11 Time: 1:15 AM To change
@@ -11,7 +11,7 @@ public class HeaderDecompressor implements Decompressor {
 	HeaderBlock headerBlock;
 
 	public void setInput(InputStream input) throws IOException {
-		this.input = new DataInputStream(new GZIPInputStream(input));
+		this.input = new DataInputStream(new CBZip2InputStream(input));
 	}
 
 	public void fillNext(ReadData data) throws IOException {
@@ -19,6 +19,7 @@ public class HeaderDecompressor implements Decompressor {
 			headerBlock = new HeaderBlock(input);
 		}
 		String header = headerBlock.nextHeader();
+        System.out.println("Header: " + header);
 		if (header != null) {
 			data.setHeader(header);
 		} else {

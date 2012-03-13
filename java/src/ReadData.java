@@ -30,10 +30,10 @@ public class ReadData {
         quality =  new StringBuilder (reader.readLine());
     }
     public void write(BufferedWriter writer) throws IOException {
-        writer.write(header.toString());
-        writer.write(sequence.toString());
-        writer.write("+");
-        writer.write(quality.toString());
+        writer.write(header.toString() + "\n");
+        writer.write(sequence.toString() + "\n");
+        writer.write("+\n");
+        writer.write(quality.toString() + "\n");
     }
     public String getHeader() {
         return header != null ? header.toString() : null;

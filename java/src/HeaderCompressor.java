@@ -1,10 +1,8 @@
+import org.apache.tools.bzip2.CBZip2OutputStream;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by IntelliJ IDEA. User: ron Date: 12/14/11 Time: 1:15 AM To change
@@ -23,7 +21,7 @@ public class HeaderCompressor implements Compressor {
 
 	@Override
 	public void setOutput(OutputStream output) throws IOException {
-		this.output = new DataOutputStream(new GZIPOutputStream(output));
+		this.output = new DataOutputStream(new CBZip2OutputStream(output));
 	}
 
 	@Override

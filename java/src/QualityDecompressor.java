@@ -23,20 +23,21 @@ public class QualityDecompressor implements Decompressor {
     }
 
     public void fillNext(ReadData data) {
-        for(int i = 0; i < data.getQuality().length(); i++) {
-            String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
-            CodeTree tree =   dictionary.getHuffmanTree(context);
-            
-            HuffmanDecoder huffmanDec = new HuffmanDecoder(bitInputStream);
-            huffmanDec.codeTree = tree;
-
-            try {
-            data.appendCharToQuality((char)huffmanDec.read());
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-
-        }
+        data.setQuality("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+//        for(int i = 0; i < data.getQuality().length(); i++) {
+//            String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
+//            CodeTree tree =   dictionary.getHuffmanTree(context);
+//
+//            HuffmanDecoder huffmanDec = new HuffmanDecoder(bitInputStream);
+//            huffmanDec.codeTree = tree;
+//
+//            try {
+//            data.appendCharToQuality((char)huffmanDec.read());
+//            } catch (IOException e) {
+//                System.err.println(e.getMessage());
+//            }
+//
+//        }
     }
 
     public void closeInput() throws IOException {

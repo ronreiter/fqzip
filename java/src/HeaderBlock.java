@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 public class HeaderBlock implements HeaderSerializable {
 
@@ -176,7 +175,7 @@ public class HeaderBlock implements HeaderSerializable {
 
 	private void readHeader(DataInputStream stream, int numericalFields)
 			throws IOException {
-		long[] newHeader = new long[numericalFields];
+		Long[] newHeader = new Long[numericalFields];
 		int i = 0;
 		for (Field field : fields) {
 
@@ -197,6 +196,7 @@ public class HeaderBlock implements HeaderSerializable {
 				break;
 			}
 		}
+        headerData.add(newHeader);
 	}
 
 	/*
@@ -215,6 +215,9 @@ public class HeaderBlock implements HeaderSerializable {
 		if (readHeaders == headerData.size() - 1) {
 			return null;
 		}
+        if (fieldsAmount == 0) {
+            fieldsAmount = fields.size();
+        }
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < fieldsAmount; i++) {
 			Field field = fields.get(i);
