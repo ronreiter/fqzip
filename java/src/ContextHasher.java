@@ -21,7 +21,7 @@ public class ContextHasher {
 
     }
     public static String hashContext(int position, String sequenceContext, String qualityContext) {
-        if (sequenceContext == null || qualityContext == null) {
+        if (sequenceContext == null || qualityContext == null || qualityContext.length() == 0) {
             return "";
         }
 

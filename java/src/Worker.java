@@ -98,7 +98,6 @@ public class Worker implements Runnable {
             ReadData nextRead = new ReadData();
 
             headerDecompressor.fillNext(nextRead);
-
             sequenceDecompressor.fillNext(nextRead);
             qualityDecompressor.fillNext(nextRead);
 
@@ -106,11 +105,7 @@ public class Worker implements Runnable {
                 break;
             }
 
-            sequenceDecompressor.fillNext(nextRead);
-
-            qualityDecompressor.fillNext(nextRead);
-
-            manager.writeRead(nextRead);            
+            manager.writeRead(nextRead);
         }
 
         manager.closeWriter();
