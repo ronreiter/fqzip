@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 public class HeaderBlock implements HeaderSerializable {
 
@@ -62,13 +63,13 @@ public class HeaderBlock implements HeaderSerializable {
 		}
 	}
 
-	public HeaderBlock(InputStream stream) throws IOException {
-		DataInputStream input = new DataInputStream(stream);
+	public HeaderBlock(DataInputStream stream) throws IOException {
+		DataInputStream input = stream;
 		parse(input);
 	}
 
 	private String getSeparators(String header) {
-		return header.replaceAll(SEPARATORS, "");
+		return header.replaceAll("[^" + SEPARATORS + "]", "");
 	}
 
 	/**
@@ -99,7 +100,6 @@ public class HeaderBlock implements HeaderSerializable {
             }
 		}
 
-        //System.out.println("Adding header " + header + " with fields " + numericFields.toString());
 		headerData.add(numericFields);
 
 		return true;
@@ -112,15 +112,11 @@ public class HeaderBlock implements HeaderSerializable {
 		stream.writeChars(separators);
 		stream.writeShort(headerData.size());
         
-        //System.out.println(separators.length());
-        //System.out.println(separators);
-        //System.out.println("number of headers: " + headerData.size());
+        System.out.println("number of headers: " + headerData.size());
 
 		// write fields
 		for (Field field : fields) {
 			field.serialize(stream);
-            //System.out.println(field.getClass().getName());
-            //System.out.println(field.getType());
 			if (field.getType() != CONSTANT_FIELD) {
 				numericalHeaderTypes.add(field);
 			}
@@ -140,7 +136,6 @@ public class HeaderBlock implements HeaderSerializable {
 							.serializeNumber(header[i]));
 					break;
 				}
-
 			}
 		}
 
@@ -211,7 +206,7 @@ public class HeaderBlock implements HeaderSerializable {
 	 * Splits header string into substrings on separators.
 	 */
 	private static String[] splitHeader(String header) {
-		return header.split(SEPARATORS);
+		return header.split("[" + SEPARATORS + "]");
 	}
 
 	/**

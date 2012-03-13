@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by IntelliJ IDEA. User: ron Date: 12/14/11 Time: 1:15 AM To change
@@ -21,8 +22,8 @@ public class HeaderCompressor implements Compressor {
 	private HeaderBlock headerBlock = null;
 
 	@Override
-	public void setOutput(OutputStream output) {
-		this.output = new DataOutputStream(output);
+	public void setOutput(OutputStream output) throws IOException {
+		this.output = new DataOutputStream(new GZIPOutputStream(output));
 	}
 
 	@Override

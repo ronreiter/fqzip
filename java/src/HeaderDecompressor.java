@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -6,11 +7,11 @@ import java.util.zip.ZipInputStream;
  * this template use File | Settings | File Templates.
  */
 public class HeaderDecompressor implements Decompressor {
-	InputStream input;
+	DataInputStream input;
 	HeaderBlock headerBlock;
 
-	public void setInput(InputStream input) {
-		this.input = input;
+	public void setInput(InputStream input) throws IOException {
+		this.input = new DataInputStream(new GZIPInputStream(input));
 	}
 
 	public void fillNext(ReadData data) throws IOException {
