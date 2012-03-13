@@ -9,11 +9,15 @@ public class ContextDictionary implements Serializable {
 
     private Map<String, CodeTree> huffmanTreeTable;
     private Map<String, List<List<Integer>>> encodingTable;
+    private CodeTree defaultTree;
+    private List<List<Integer>> defaultEncodingTable;
     private transient Map<String, ContextStats> statistics;
-    
+    private transient ContextStats defaultStats;
+
     public void startLearning() {
         statistics = new HashMap<String, ContextStats>();
         huffmanTreeTable = new HashMap<String, CodeTree>();
+        defaultStats = new ContextStats();
     }
     
     public void learn(ReadData data) {
@@ -34,8 +38,10 @@ public class ContextDictionary implements Serializable {
                 stats = new ContextStats();
             }
             // add the statistical data.
-            stats.addStatistic((char)(quality.charAt(i) - 33));
+            char stat = (char)(quality.charAt(i) - 33);
+            stats.addStatistic(stat);
             statistics.put(context, stats);
+            defaultStats.addStatistic(stat);
         }
     }
 
@@ -47,27 +53,12 @@ public class ContextDictionary implements Serializable {
         return encodingTable.get(context);
     }
 
-    public Map<String, CodeTree> getHuffmanTreeTable() {
-        return huffmanTreeTable;
-    }
-
-    public Map<String, List<List<Integer>>> getEncodingTable () {
-        return encodingTable;
-    }
-
-    public void setHuffmanTreeTable(Map<String, CodeTree> huffmanTreeTableInput) {
-        huffmanTreeTable = huffmanTreeTableInput;
-    }
-
-    public void setEncodingTable (Map<String, List<List<Integer>>>  encodingTableInput) {
-        encodingTable = encodingTableInput;
-    }
-
     public void createHuffmanTreeTable() {
 
         for (Map.Entry<String, ContextStats> entry : statistics.entrySet()) {
             huffmanTreeTable.put(entry.getKey(), entry.getValue().buildTree());
         }
+        defaultTree = defaultStats.buildTree();
     }
 
     public void createEncodingTable() {
@@ -76,6 +67,8 @@ public class ContextDictionary implements Serializable {
         for (Map.Entry<String, ContextStats> entry : statistics.entrySet()) {
             encodingTable.put(entry.getKey(), entry.getValue().buildEncodingTable());
         }
+
+        defaultEncodingTable = defaultStats.buildEncodingTable();
     }
     
     public void readDictionaryFromFile(InputStream inputFile) throws IOException {
@@ -102,4 +95,13 @@ public class ContextDictionary implements Serializable {
             System.err.println(e);
         }
     }
+    
+    public CodeTree getDefaultTree() {
+        return defaultTree;
+    }
+
+    public List<List<Integer>> getDefaultEncodingTable() {
+        return defaultEncodingTable;
+    }
+
 }

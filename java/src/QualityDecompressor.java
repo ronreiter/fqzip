@@ -28,10 +28,17 @@ public class QualityDecompressor implements Decompressor {
     }
 
     public void fillNext(ReadData data) {
-        
+        if (data.getSequence() == null) {
+            return;
+        }
+
         for(int i = 0; i < data.getSequence().length(); i++) {
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
-            CodeTree tree =   dictionary.getHuffmanTree(context);
+            CodeTree tree = dictionary.getHuffmanTree(context);
+
+            if (tree == null) {
+                tree = dictionary.getDefaultTree();
+            }
 
             HuffmanDecoder huffmanDec = new HuffmanDecoder(bitInputStream);
             huffmanDec.codeTree = tree;

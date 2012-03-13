@@ -20,16 +20,13 @@ public class ContextHasher {
     ContextHasher() {
 
     }
-    /**
-     *
-     * @param position
-     * @param sequenceContext
-     * @param qualityContext
-     * @return
-     */
-     public static String hashContext(int position, String sequenceContext, String qualityContext) {
+    public static String hashContext(int position, String sequenceContext, String qualityContext) {
+        if (sequenceContext == null || qualityContext == null) {
+            return "";
+        }
+
         String context = "" + (position / POSITION_DIVISION) + ":";
-    
+
         for (int i = Math.max(position - SEQUENCE_BACKWARDS, 0);
              i <= Math.min(position + SEQUENCE_FORWARD, SEQUENCE_SIZE - 1); i++) {
             context += sequenceContext.charAt(i);
@@ -42,7 +39,7 @@ public class ContextHasher {
         }
         context += ":" + Utils.join(qualities,",");
 
-         return context;
+    return context;
     }
 }
 
