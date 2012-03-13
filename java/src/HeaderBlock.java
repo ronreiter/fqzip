@@ -20,19 +20,7 @@ public class HeaderBlock implements HeaderSerializable {
 	private int readHeaders = 0;
     private int numberOfNumericFields = 0;
 
-	private static enum Separator {
-		Colon(':'), Period('.'), Space(' '), EqualsSign('='), Slash('/');
-
-		private final char character;
-
-		Separator(char character) {
-			this.character = character;
-		}
-
-		char getCharacter() {
-			return this.character;
-		}
-	}
+    static final String SEPARATORS = ":. =/";
 
 	/**
 	 * 
@@ -40,6 +28,7 @@ public class HeaderBlock implements HeaderSerializable {
 	 *            the first header in the block.
 	 */
 	public HeaderBlock(String header) {
+        System.out.println("Building header block with header " + header);
 
 		String[] splitHeader = splitHeader(header);
 		separators = getSeparators(header);
@@ -67,7 +56,8 @@ public class HeaderBlock implements HeaderSerializable {
 				field = new ConstantField(splitHeader[i]);
 			}
 
-            System.out.println("Adding field type: " + field.getType());
+            //System.out.println("Adding field type: " + field.getType());
+            //System.out.println(field.getClass());
             fields.add(field);
 		}
 	}
@@ -78,12 +68,7 @@ public class HeaderBlock implements HeaderSerializable {
 	}
 
 	private String getSeparators(String header) {
-		StringBuilder pattern = new StringBuilder("[^");
-		for (Separator s : Separator.values()) {
-			pattern.append(s.getCharacter());
-		}
-		pattern.append(']');
-		return header.replaceAll(pattern.toString(), "");
+		return header.replaceAll(SEPARATORS, "");
 	}
 
 	/**
@@ -105,18 +90,16 @@ public class HeaderBlock implements HeaderSerializable {
 		// Constant fields check
         int numericIndex = 0;
 		for (int i = 0; i < fieldsAmount; i++) {
-			try {
-				long value = Integer.parseInt(splitHeader[i]);
-				fields.set(numericIndex, new NumericField(value));
-				numericFields[numericIndex] = value;
-                numericIndex++;
-			} catch (NumberFormatException e) {
-				if (!(fields.get(i) instanceof ConstantField)) {
-					return false;
-				}
-			}
+            switch(fields.get(i).getType()) {
+                case SMALL_DELTA_FIELD:
+                case LARGE_DELTA_FIELD:
+                    numericFields[numericIndex] = Long.parseLong(splitHeader[i]);
+                    numericIndex++;
+                    break;
+            }
 		}
 
+        //System.out.println("Adding header " + header + " with fields " + numericFields.toString());
 		headerData.add(numericFields);
 
 		return true;
@@ -129,15 +112,15 @@ public class HeaderBlock implements HeaderSerializable {
 		stream.writeChars(separators);
 		stream.writeShort(headerData.size());
         
-        System.out.println(separators.length());
-        System.out.println(separators);
-        System.out.println("number of headers: " + headerData.size());
+        //System.out.println(separators.length());
+        //System.out.println(separators);
+        //System.out.println("number of headers: " + headerData.size());
 
 		// write fields
 		for (Field field : fields) {
 			field.serialize(stream);
-            System.out.println(field.getClass().getName());
-            System.out.println(field.getType());
+            //System.out.println(field.getClass().getName());
+            //System.out.println(field.getType());
 			if (field.getType() != CONSTANT_FIELD) {
 				numericalHeaderTypes.add(field);
 			}
@@ -228,12 +211,7 @@ public class HeaderBlock implements HeaderSerializable {
 	 * Splits header string into substrings on separators.
 	 */
 	private static String[] splitHeader(String header) {
-		StringBuilder pattern = new StringBuilder("[");
-		for (Separator s : Separator.values()) {
-			pattern.append(s.getCharacter());
-		}
-		pattern.append(']');
-		return header.split(pattern.toString());
+		return header.split(SEPARATORS);
 	}
 
 	/**
