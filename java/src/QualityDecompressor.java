@@ -34,6 +34,9 @@ public class QualityDecompressor implements Decompressor {
 
         for(int i = 0; i < data.getSequence().length(); i++) {
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
+
+            System.out.println("Context: " + context);
+
             CodeTree tree = dictionary.getHuffmanTree(context);
 
             if (tree == null) {
@@ -44,9 +47,10 @@ public class QualityDecompressor implements Decompressor {
             huffmanDec.codeTree = tree;
 
             try {
-            data.appendCharToQuality((char)(huffmanDec.read() + 33));
+                data.appendCharToQuality((char)(huffmanDec.read() + 33));
             } catch (IOException e) {
                 System.err.println(e.getMessage());
+                return;
             }
         }
     }

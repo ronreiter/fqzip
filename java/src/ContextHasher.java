@@ -20,8 +20,16 @@ public class ContextHasher {
     ContextHasher() {
 
     }
+
+    /** hashContext
+     *
+     * @param position the position of the current character in the read
+     * @param sequenceContext the value of the sequence
+     * @param qualityContext the value of the quality up to now
+     * @return String the context string
+     */
     public static String hashContext(int position, String sequenceContext, String qualityContext) {
-        if (sequenceContext == null || qualityContext == null || qualityContext.length() == 0) {
+        if (sequenceContext == null || qualityContext == null || qualityContext.length() < position) {
             return "";
         }
 
@@ -34,7 +42,6 @@ public class ContextHasher {
 
         List<Integer> qualities = new ArrayList<Integer> ();
         for (int i = Math.max((position - QUALITY_BACKWARDS), 0); i < position; i++) {
-
             qualities.add((((int)qualityContext.charAt(i) - 33) / QUALITY_DIVISION));
         }
         context += ":" + Utils.join(qualities,",");

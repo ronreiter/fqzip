@@ -28,8 +28,11 @@ public class QualityCompressor implements Compressor {
     }
 
     public void compressNext(ReadData data) throws IOException {
-        for(int i = 0; i < data.getQuality().length(); i++) {
+        // we use the sequence length just to get it to conform with the decompression.
+        for(int i = 0; i < data.getSequence().length(); i++) {
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
+            
+            System.out.println("Context: " + context);
             List<List<Integer>> encodingTable = dictionary.getEncodingTable(context);
 
             if (encodingTable == null) {

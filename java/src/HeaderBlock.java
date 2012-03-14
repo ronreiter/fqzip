@@ -1,8 +1,4 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,7 +136,13 @@ public class HeaderBlock {
 	}
 
 	public void parse(DataInputStream stream) throws IOException {
-		int length = stream.read();
+        int length;
+        try {
+            length = stream.readByte();
+        } catch (EOFException e) {
+            return;
+        }
+
         if (length < 0) {
             return;
         }
@@ -195,6 +197,7 @@ public class HeaderBlock {
 		int i = 0;
 		for (Field field : fields) {
 
+            // only small and large delta fields actually store information.
 			switch (field.getType()) {
 			case CONSTANT_FIELD:
 				break;
@@ -226,7 +229,7 @@ public class HeaderBlock {
 	 * @return the next header if exists, null otherwise
 	 */
 	public String nextHeader() {
-		if (readHeaders == headerData.size() - 1) {
+		if (headerData == null || readHeaders == headerData.size()) {
 			return null;
 		}
         if (fieldsAmount == 0) {
