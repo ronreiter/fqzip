@@ -71,7 +71,12 @@ public class ThreadPoolManager {
     }
 
     public synchronized ReadData getRead() throws IOException {
-        ReadData nextRead = new ReadData(reader);
+        ReadData nextRead;
+        try {
+            nextRead = new ReadData(reader);
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
 
         if (nextRead.getHeader() != null) {
             return nextRead;

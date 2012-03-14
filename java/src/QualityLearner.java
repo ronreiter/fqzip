@@ -12,8 +12,12 @@ public class QualityLearner implements Compressor {
     }
 
     public void compressNext(ReadData data) throws IOException {
-        this.dictionary.learn(data);
-        this.reads++;
+        dictionary.learn(data);
+        reads++;
+        
+        if (reads % 100000 == 0) {
+            System.err.println("Reads processed: " + reads);
+        }
     }
 
     public void setOutput(OutputStream output) {
