@@ -27,31 +27,28 @@ public class QualityDecompressor implements Decompressor {
         bitInputStream = new BitInputStream(input);
     }
 
-    public void fillNext(ReadData data) {
+    public void fillNext(ReadData data) throws IOException {
         if (data.getSequence() == null) {
             return;
         }
 
         for(int i = 0; i < data.getSequence().length(); i++) {
+            // generate the current context
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
 
-            System.out.println("Context: " + context);
-
+            // get the relevant Huffman tree (PPM encoding)
             CodeTree tree = dictionary.getHuffmanTree(context);
 
+            // if no context, get the default tree
             if (tree == null) {
                 tree = dictionary.getDefaultTree();
             }
 
+            // create a new decoder using the tree
             HuffmanDecoder huffmanDec = new HuffmanDecoder(bitInputStream);
             huffmanDec.codeTree = tree;
 
-            try {
-                data.appendCharToQuality((char)(huffmanDec.read() + 33));
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-                return;
-            }
+            data.appendCharToQuality((char)(huffmanDec.read() + 33));
         }
     }
 

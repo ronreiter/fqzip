@@ -32,7 +32,6 @@ public class QualityCompressor implements Compressor {
         for(int i = 0; i < data.getSequence().length(); i++) {
             String context = ContextHasher.hashContext(i, data.getSequence(), data.getQuality());
             
-            System.out.println("Context: " + context);
             List<List<Integer>> encodingTable = dictionary.getEncodingTable(context);
 
             if (encodingTable == null) {
