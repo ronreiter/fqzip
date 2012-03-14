@@ -27,15 +27,14 @@ Learning mode
 
 Use a large FASTQ file with data which resembles the rest the data you wish to compress.
 
-    fqzip learn <FASTQ FILE>
+    java -jar fqzip.jar learn <FASTQ FILE>
 
 Compression mode
 ----------------
 
 The compression is done to 3 files per thread using the output prefix.
 
-    fqzip compress <FASTQ INPUT FILE> <OUTPUT PREFIX> <NUMBER OF THREADS>
-
+    java -jar fqzip.jar compress <FASTQ INPUT FILE> <OUTPUT PREFIX> <NUMBER OF THREADS>
 
 Decompression mode
 ------------------
@@ -43,14 +42,14 @@ Decompression mode
 The decompression mode reads all the files it requires using the output prefix and the 
 number of threads, and writes them out into a FASTQ file.
 
-    fqzip decompress <INPUT PREFIX> <FASTQ OUTPUT FILE> <NUMBER OF THREADS>
+    java -jar fqzip.jar decompress <INPUT PREFIX> <FASTQ OUTPUT FILE> <NUMBER OF THREADS>
 
 Example
 -------
 
 Running:
 
-    fqzip compress input.fastq output 4
+    java -jar fqzip.jar compress input.fastq output 4
 
 Will generate the following files:
 
@@ -69,11 +68,10 @@ Will generate the following files:
 
 To decompress the FASTQ file back to the original, use:
 
-    fqzip decompress output input-decompressed.fastq 4
+    java -jar fqzip decompress output input-decompressed.fastq 4
 
-
-About Us
---------
+About The Team
+--------------
 
 FQZip is an IDC (Interdisciplinary Center - Herzliya) project lead by Inbal Landsberg for the sequence squeeze competition.
 The creators of FQZip are Or Peled, Barak Yacov, Yonatan Amir, Dan Benjamin and Ron Reiter.
