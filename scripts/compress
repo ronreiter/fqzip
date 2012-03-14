@@ -1,0 +1,11 @@
+#!/usr/bin/python
+
+import os
+
+ORIGINAL_PATH = "/contest-data/original/"
+COMPRESSED_PATH = "/contest-data/compressed/"
+DECOMPRESSED_PATH = "/contest-data/decompressed/"
+
+for fn in os.listdir(ORIGINAL_PATH):
+	os.system("java -jar fqzip.jar compress %s %s" % (ORIGINAL_PATH + fn, COMPRESSED_PATH + fn))
+
