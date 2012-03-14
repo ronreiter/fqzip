@@ -68,7 +68,7 @@ Will generate the following files:
 
 To decompress the FASTQ file back to the original, use:
 
-    java -jar fqzip decompress output input-decompressed.fastq 4
+    java -jar fqzip.jar decompress output input-decompressed.fastq 4
 
 About The Team
 --------------
