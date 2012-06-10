@@ -8,6 +8,19 @@ fqzip is a Java command line program which compresses FASTQ files using the foll
 
 FQZip uses a premade Huffman tree index for the PPM quality compression. For that, it must learn an existing FASTQ 
 file for it to generate an efficient encoding.
+The premade PPM dictionary consists of multiple Huffman trees for every context - each context consists of the current
+sequence identifier (A/C/T/G) currently being encoded or decoded, the current position (between 0 and 100) and the last
+2 quality and sequence characters encoded. When compressing and decompressing, the correct Huffman tree is chosen 
+to decode the decoded output to the bitstream, and every symbol causes the context to change, so no two symbols
+actually belong to the same tree.
+
+The header is also compressed with domain-specific compression, which uses super-blocks. Each block has its own fixed
+structure, and variable field types which are automatically identified and built per block. Then, only the needed
+information is stored, and compression is achieved by storing 0-bit information fields, such as incremental fields
+which increment all the way through the block, or low bit information fields which can be packed tightly.
+
+Sequence is compressed using BZIP2 which is very efficient for sequence data, but should be eventually replaced
+by alignment compression.
 
 Also, the compression and decompression of FASTQ files MUST be done using the same tree!
 
